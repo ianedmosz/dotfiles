@@ -1,0 +1,10 @@
+# Nord theme
+# Colors (class, border, background, text, indicator, child_border)
+client.focused          #5e81ac #5e81ac #d8dee9 #2e3440   #5e81ac
+client.focused_inactive #4c566a #3b4252 #d8dee9 #4c566a   #4c566a
+client.unfocused        #3b4252 #2e3440 #d8dee9 #3b4252   #3b4252
+client.urgent           #bf616a #bf616a #d8dee9 #2e3440   #bf616a
+client.placeholder      #2e3440 #2e3440 #d8dee9 #2e3440   #2e3440
+client.background       #2e3440
+
+# wallpaper: nord.jpg
