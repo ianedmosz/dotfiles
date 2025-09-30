@@ -1,0 +1,128 @@
+@import url("/home/ianedmosz/.config/wofi/themes/web-core.css");
+
+/* Reutilizamos variables del tema importado */
+@define-color window-bg alpha(@base, 0.9);
+@define-color input-bg alpha(@surface, 0.5);
+@define-color entry-selected-bg alpha(@highlightMed, 0.5);
+@define-color border-color @mauve;
+
+@keyframes fadeIn {
+    0% { opacity: 0; }
+    100% { opacity: 1; }
+}
+
+/* Reset global */
+* {
+    all: unset;
+    font-family: 'CodeNewRoman Nerd Font Mono', monospace;
+    font-size: 18px;
+    outline: none;
+    border: none;
+    text-shadow: none;
+    background-color: transparent;
+}
+
+/* * 🎨 Ventana principal - INCREASED BORDER-RADIUS
+ * Set the primary rounded corners here.
+ */
+window {
+    all: unset;
+    /* Use a radius greater than or equal to #outer-box's radius */
+    border-radius: 12px; 
+    padding: 20px;
+    background-color: @window-bg;
+}
+
+/* * Inner box - REDUCED PADDING/MARGIN
+ * These were likely creating the inconsistent "border" show-off 
+ * by letting the window-bg show through. We'll rely on the 
+ * window padding and scroll padding/margins instead.
+ */
+#inner-box {
+    margin: 0px; /* Reduced to 0 */
+    padding: 0px; /* Reduced to 0 */
+    border: none;
+}
+
+/* Outer box con borde - NO CHANGE NEEDED */
+#outer-box {    
+    border: 2px solid @border-color;
+    /* Keep this radius as is, or adjust with window's radius */
+    border-radius: 8px; 
+}
+
+/* * Scroll area - ADJUSTED PADDING/MARGIN
+ * Let's put the main content padding here.
+ */
+#scroll {
+    margin: 0px; /* Removed margin */
+    padding: 10px; /* Reduced padding for a tighter fit inside #outer-box */
+    border: none;
+}
+
+/* Input - NO CHANGE NEEDED */
+#input {
+    all: unset;
+    margin: 20px;
+    padding: 20px;
+    border: none;
+    outline: none;
+    color: @text;
+    box-shadow: 1px 1px 5px rgba(0,0,0,0.5);
+    border-radius: 10px;
+    background-color: @input-bg;
+}
+
+#input image {
+    border: none;
+    color: @red;
+    padding-right: 10px;
+}
+
+#input * {
+    border: none;
+    outline: none;
+}
+
+#input:focus {
+    outline: none;
+    border: none;
+    border-radius: 10px;
+}
+
+/* Texto - NO CHANGE NEEDED */
+#text {
+    margin: 5px;
+    border: none;
+    color: @text;
+    outline: none;
+}
+
+/* Entries - NO CHANGE NEEDED */
+#entry {
+    border: none;
+    margin: 5px;
+    padding: 10px;
+}
+
+#entry arrow {
+    border: none;
+    color: @lavender;
+}
+
+/* Entry seleccionado - NO CHANGE NEEDED */
+#entry:selected {
+    box-shadow: 1px 1px 5px rgba(255,255,255,0.03);
+    border: none;
+    border-radius: 20px;
+    background-color: @entry-selected-bg;
+}
+
+#entry:selected #text {
+    color: @mauve;
+}
+
+/* Entry activo (drop) - NO CHANGE NEEDED */
+#entry:drop(active) {
+    background-color: @lavender !important;
+}

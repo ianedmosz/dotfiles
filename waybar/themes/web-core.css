@@ -1,0 +1,26 @@
+/*
+* Variant: Webcore Dark Pro - MODULE-SPECIFIC COLORS
+* Maintainer: User
+*/
+
+/* --- CORE THEME COLORS (Mapped from your input) --- */
+@define-color base              #0D0A12;    /* Mapped from background */
+@define-color surface           #140A1D;    /* Mapped from surface */
+@define-color overlay           #181825;    /* Mapped from overlay */
+@define-color muted             #8A88A0;    /* Mapped from muted */
+@define-color subtle            #7F849C;    /* Mapped from subtle */
+@define-color text              #E3C7FC;    /* Mapped from foreground */
+
+@define-color highlightLow      #0A0812;    /* Mapped from surface-variant */
+@define-color highlightMed      #140A1D;    /* Mapped from surface */
+@define-color highlightHigh     #7F849C;    /* Mapped from subtle */
+
+/* --- MODULE-SPECIFIC COLORS (Mapped for visibility on dark base) --- */
+@define-color color-clock           #B4BFFE;    /* Accent for high visibility */
+@define-color color-network         #89B4FA;    /* Secondary */
+@define-color color-volume          #BD93F9;    /* Primary */
+@define-color color-battery         #7F849C;    /* Subtle for less emphasis */
+@define-color color-power           #FF497A;    /* Error for power/urgent actions */
+@define-color color-theme-switch    #A6E3A1;    /* Success for switches */
+@define-color color-wallpaper       #6BE0FF;    /* Warning/Cyan for visibility */
+@define-color color-active-workspace #BD93F9;   /* Primary for active/focused elements */

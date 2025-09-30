@@ -1,0 +1,9 @@
+focus-ring {
+        width 5
+        active-color "#b58900" 
+        inactive-color "#586e75"
+    }
+
+    border {
+        off
+    }

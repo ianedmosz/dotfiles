@@ -1,0 +1,37 @@
+/*
+* Variant: Webcore Dark Pro Mapped to Catppuccin Variables
+* Maintainer: User
+* * Hex values are from:
+* background = #0D0A12
+* foreground = #E3C7FC
+* primary = #BD93F9
+* secondary = #89B4FA
+* accent = #B4BFFE
+* success = #A6E3A1
+* warning = #6BE0FF
+* error = #FF497A (Assumed)
+*/
+
+/* --- CORE THEME COLORS (Mapped from your input) --- */
+@define-color base              #0D0A12;    /* Mapped from background */
+@define-color surface           #140A1D;    /* Mapped from surface */
+@define-color overlay           #181825;    /* Mapped from overlay */
+@define-color muted             #8A88A0;    /* Mapped from muted */
+@define-color subtle            #7F849C;    /* Mapped from subtle */
+@define-color text              #E3C7FC;    /* Mapped from foreground */
+
+@define-color highlightLow      #0A0812;    /* Mapped from surface-variant */
+@define-color highlightMed      #140A1D;    /* Mapped from surface */
+@define-color highlightHigh     #7F849C;    /* Mapped from subtle */
+
+
+/* --- GENERIC CATPPUCCIN-STYLE COLORS (Mapped for usage) --- */
+@define-color flamingo          #A6E3A1;    /* Mapped from success */
+@define-color pink              #B4BFFE;    /* Mapped from accent */
+@define-color mauve             #BD93F9;    /* Mapped from primary */
+@define-color red               #B4BFFE;    /* Mapped from accent */
+@define-color cat_blue          #89B4FA;    /* Mapped from secondary */
+@define-color cat_pink          #6BE0FF;    /* Mapped from warning */
+@define-color rose              #A6E3A1;    /* Mapped from success */
+@define-color love              #FF497A;    /* Mapped from error (Assumed) */
+@define-color gold              #B4BFFE;    /* Mapped from accent */

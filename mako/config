@@ -1,0 +1,16 @@
+# ~/.config/mako/config
+anchor=top-right
+
+background-color=#ffffff
+border-color=#F5F5F5
+text-color=#000000
+
+font=Noto Sans 10
+
+border-radius=12,12,12,12
+margin=6,6,6,6
+border-size=2
+
+default-timeout=4000
+text-alignment=left
+

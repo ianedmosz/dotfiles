@@ -1,0 +1,27 @@
+/*
+* Variant: Rosé Pine Dawn - REVISED WITH MODULE-SPECIFIC COLORS
+* Maintainer: DankChoir
+*/
+
+/* --- CORE THEME COLORS (Keep these standard) --- */
+@define-color base              #faf4ed;
+@define-color surface           #fffaf3;
+@define-color overlay           #f2e9e1;
+
+@define-color muted             #9893a5;
+@define-color subtle            #797593;
+@define-color text              #575279; /* Dark text for light background */
+
+@define-color highlightLow      #f4ede8;
+@define-color highlightMed      #dfdad9;
+@define-color highlightHigh     #cecacd;
+
+/* --- MODULE-SPECIFIC COLORS (Defined for contrast) --- */
+@define-color color-clock           #ea9d34; /* Dark gold/orange for light background */
+@define-color color-network         #286983; /* Pine (Darker Blue) for contrast */
+@define-color color-volume          #907aa9; /* Iris (Darker Purple) for contrast */
+@define-color color-battery         #797593; /* Subtle (Dark Gray) for contrast */
+@define-color color-power           #b4637a; /* Love (Dark Rose-Red) for power/urgent */
+@define-color color-theme-switch    #d7827e; /* Rose for buttons/switches */
+@define-color color-wallpaper       #907aa9; /* Iris for visibility */
+@define-color color-active-workspace #d7827e; /* Rose for active/focused */

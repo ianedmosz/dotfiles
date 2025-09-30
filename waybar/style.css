@@ -1,0 +1,98 @@
+@import url("/home/ianedmosz/.config/waybar/themes/web-core.css");
+
+/* Transiciones suaves */
+* {
+    transition: 150ms;
+}
+
+/* Barra principal */
+#waybar {
+    background: @base;
+    color: @text;
+}
+
+/* Módulos a la derecha */
+.modules-right.horizontal {
+    margin-right: 10px;
+}
+
+/* Tray */
+#tray > widget {
+    border-radius: 1rem;
+}
+#tray > widget > image {
+    padding: 0 0.5rem;
+}
+
+/* Todos los módulos - UPDATED FOR PILL EFFECT */
+label.module {
+    font-family: "JetbrainsMono Nerd Font", monospace;
+    font-size: 13px;
+    
+    /* 💊 Pill Styling */
+    padding: 0 12px; 
+    margin: 4px 4px; 
+    border-radius: 1rem; 
+    border: 1px solid; 
+    background: @highlightMed; 
+}
+
+/* Colores por módulo */
+#clock { color: @color-clock; }
+#network { color: @color-network; } 
+#pulseaudio { color: @color-volume; }
+#custom-theme { color: @color-theme-switch; }
+#custom-waytheme { color: @color-theme-switch; }
+#custom-wallpaper { color: @color-wallpaper; }
+#custom-battery { color: @color-battery; }
+#custom-audio_idle_inhibitor { color: @color-clock; }
+#bluetooth { color: @color-network; }
+#custom-power { color: @color-power; }
+
+/* Hover para todos los módulos */
+label.module:hover,
+#tray > widget:hover {
+    background: @highlightMed;
+}
+
+/* Workspaces y tags */
+#tags,
+#workspaces {
+    margin: 2px;
+    padding: 0 4px;
+    border-radius: 1rem;
+    background: none;
+}
+
+#tags button,
+#workspaces button {
+    font-family: "JetbrainsMono Nerd Font", monospace;
+    font-size: 14px; /* Antes estaba en 0 */
+    min-width: 1.75rem;
+    min-height: 1.75rem;
+    margin: 8px 0.3rem;
+    padding: 0;
+    border-radius: 1rem;
+}
+
+#tags button.empty,
+#workspaces button.empty {
+    background: @subtle;
+    color: @highlightLow;
+}
+
+#tags button.focused,
+#tags button.occupied,
+#workspaces button,
+#workspaces button.active {
+    background: @color-active-workspace;
+    color: @text;
+}
+
+#tags button.urgent,
+#workspaces button.urgent {
+    background: @color-power;
+}
+
+
+

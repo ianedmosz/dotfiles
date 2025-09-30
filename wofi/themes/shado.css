@@ -1,0 +1,35 @@
+/*
+* Variant: Shadow Theme Mapped to Catppuccin Variables
+* Maintainer: User
+* * Hex values are from:
+* background = #191724
+* foreground = #e3c7fc
+* primary = #bd93f9 (Mauve)
+* secondary = #8897F4 (Cat_Blue)
+* accent = #FF4971 (Red/Pink)
+* error = #B52A5B (Love)
+*/
+
+/* --- CORE THEME COLORS --- */
+@define-color base              #191724;    /* Mapped from background */
+@define-color surface           #140a1d;    /* Mapped from surface */
+@define-color overlay           #140a1d;    /* Mapped from overlay/surface */
+@define-color muted             #a8899c;    /* Mapped from muted */
+@define-color subtle            #a8899c;    /* Mapped from subtle */
+@define-color text              #e3c7fc;    /* Mapped from foreground */
+
+@define-color highlightLow      #09090d;    /* Mapped from surface-variant */
+@define-color highlightMed      #140a1d;    /* Mapped from overlay */
+@define-color highlightHigh     #f1c4e0;    /* Mapped from border */
+
+
+/* --- GENERIC CATPPUCCIN-STYLE COLORS (Mapped for usage) --- */
+@define-color flamingo          #F18FB0;    /* Mapped from success */
+@define-color pink              #FF4971;    /* Mapped from accent */
+@define-color mauve             #bd93f9;    /* Mapped from primary */
+@define-color red               #FF4971;    /* Mapped from accent */
+@define-color cat_blue          #8897F4;    /* Mapped from secondary */
+@define-color cat_pink          #E9729D;    /* Mapped from warning */
+@define-color rose              #F18FB0;    /* Mapped from success */
+@define-color love              #B52A5B;    /* Mapped from error */
+@define-color gold              #FF4971;    /* Mapped from accent */
