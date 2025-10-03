@@ -1,17 +1,15 @@
 #!/bin/bash
 
 # --- Configuration ---
-# The location of your wallpapers
 WALLPAPER_DIR="$HOME/.config/wallpapers"
-# Persistence file location (where the last path is saved)
-PERSISTENCE_FILE="$HOME/.config/fuzzel/last_wallpaper.txt"
-# Swaybg scaling mode (used both for applying and saving)
+PERSISTENCE_FILE="$HOME/.config/niri/last_wallpaper.txt"
 SWAYBG_MODE="fill"
 WOFI_PROMPT="Select Wallpaper:"
 
-# --- Main Logic ---
+# --- Ensure persistence dir exists ---
+mkdir -p "$(dirname "$PERSISTENCE_FILE")"
 
-# 1. Find and list available wallpapers
+# --- Find wallpapers ---
 wallpaper_list=$(find "$WALLPAPER_DIR" -maxdepth 1 -type f \
     \( -iname "*.jpg" -o -iname "*.jpeg" -o -iname "*.png" \) \
     -exec basename {} \; 2>/dev/null)
@@ -21,21 +19,28 @@ if [[ -z "$wallpaper_list" ]]; then
     exit 1
 fi
 
-# 2. Pipe the list to Wofi for user selection
+# --- Select wallpaper ---
 SELECTED_FILE=$(echo -e "$wallpaper_list" | wofi --dmenu --prompt "$WOFI_PROMPT")
 
 if [[ -z "$SELECTED_FILE" ]]; then
-    exit 0 # Selection cancelled
+    # Si no eliges nada pero ya hay un archivo, reusa el último
+    if [[ -f "$PERSISTENCE_FILE" ]]; then
+        IMG=$(head -n1 "$PERSISTENCE_FILE")
+        MODE=$(tail -n1 "$PERSISTENCE_FILE")
+        swaybg -m "$MODE" -i "$IMG" &
+        notify-send "Wallpaper Loader" "Se aplicó el último wallpaper guardado."
+    else
+        notify-send -u critical "Wallpaper Error" "No wallpaper selected and no persistence file found."
+    fi
+    exit 0
 fi
 
 WALLPAPER_PATH="$WALLPAPER_DIR/$SELECTED_FILE"
 
-# 3. Apply the wallpaper immediately
-swaybg -m "$SWAYBG_MODE" -i "$WALLPAPER_PATH"
+# --- Apply wallpaper ---
+swaybg -m "$SWAYBG_MODE" -i "$WALLPAPER_PATH" &
 
-# 4. Save the path and mode to the persistence file
-# This is what the Niri startup script will read later.
-mkdir -p "$(dirname "$PERSISTENCE_FILE")"
+# --- Save wallpaper + mode ---
 echo "$WALLPAPER_PATH" > "$PERSISTENCE_FILE"
 echo "$SWAYBG_MODE" >> "$PERSISTENCE_FILE"
 
