@@ -1,0 +1,403 @@
+#+Title: Emacs Config From scratch
+#+AUTHOR: Ianedmosz
+#+DESCRIPTION: Pls just work on your ass
+
+
+* Package Manager
+#+begin_src emacs-lisp
+
+  ;; Tell straight to NOT install built-in packages
+  (straight-use-package '(project :type built-in))
+  (straight-use-package '(xref :type built-in))
+  (straight-use-package '(eglot :type built-in))
+  (straight-use-package '(eldoc :type built-in))
+  (straight-use-package '(flymake :type built-in))
+
+  ;; Integrar use-package con straight
+  (straight-use-package 'use-package)
+  (setq straight-use-package-by-default t)
+#+end_src
+
+
+* Evil Mode
+#+begin_src emacs-lisp
+  (use-package evil
+    :init
+    (setq evil-want-integration t)
+    (setq evil-want-keybinding nil)
+    (setq evil-want-C-u-scroll t)
+    (setq evil-undo-system 'undo-redo)
+    :config
+    (setq evil-shift-width 4) 
+    (evil-mode 1))
+
+  (use-package evil-collection
+    :after evil
+    :config
+    (evil-collection-init))
+#+end_src
+
+** Which Key
+#+begin_src emacs-lisp
+
+  (use-package which-key
+    :init (which-key-mode)
+    :diminish which-key-mode
+    :config
+    (setq which-key-idle-delay 0.3))
+
+(which-key-setup-side-window-bottom)
+
+#+end_src
+
+* Emacs Aspect Stuff
+
+** General setting
+#+begin_src emacs-lisp
+
+(menu-bar-mode -1)
+ (scroll-bar-mode -1)
+ (tool-bar-mode -1)
+#+end_src
+** Org Modern
+
+#+begin_src emacs-lisp
+
+  (use-package org-modern
+    :straight t
+    :hook ((org-mode . org-modern-mode)
+           (org-agenda-finalize . org-modern-agenda))
+    :config
+    ;; --- Org-mode variables (all in one setq) ---
+    (setq
+     org-auto-align-tags nil
+     org-tags-column 0
+     org-catch-invisible-edits 'show-and-error
+     org-special-ctrl-a/e t
+     org-insert-heading-respect-content t
+     org-hide-emphasis-markers t
+     org-pretty-entities t
+     org-agenda-tags-column 0
+     org-ellipsis "…"
+    org-modern-star '("●" "○" "◉" "◇" "◆"))
+
+    ) 
+
+  ;; --- GLOBAL SETTINGS (Outside use-package) ---
+
+  (set-face-attribute 'default nil
+                      :family "JetBrains Mono"
+                      :height 120)
+
+  (with-eval-after-load 'org
+    (global-org-modern-mode))
+
+
+#+end_src
+
+** Line Numbers
+
+#+begin_src emacs-lisp
+
+  (column-number-mode)
+  (setq display-line-numbers-type 'relative)
+  (global-display-line-numbers-mode t)
+
+  (dolist (mode '(term-mode-hook
+                  shell-mode-hook
+                  eshell-mode-hook))
+    (add-hook mode (lambda () (display-line-numbers-mode 0))))
+
+
+(add-hook 'org-mode-hook #'(lambda () (display-line-numbers-mode 0)))
+#+end_src
+
+
+
+* Themes stuff 
+** My temas
+#+begin_src emacs-lisp
+  (use-package catppuccin-theme
+    :straight t
+    :config
+    (load-theme 'catppuccin :no-confirm))
+#+end_src
+* Menu Commands
+** Menu For command
+
+#+begin_src emacs-lisp
+
+(use-package vertico
+  :init
+  (vertico-mode))
+
+(use-package marginalia
+  :after vertico
+  :init
+  (marginalia-mode))
+
+(use-package orderless
+  :init
+  (setq completion-styles '(orderless)
+        completion-category-defaults nil
+        completion-category-overrides '((file (styles partial-completion)))))
+
+(use-package consult
+  :bind (("C-s" . consult-line)))
+
+#+end_src
+
+
+* LSP MODES
+** LSP Mode
+#+begin_src emacs-lisp
+     (setq lsp-auto-guess-root t)
+
+  (use-package lsp-mode
+    :commands (lsp lsp-deferred)
+    
+    :init
+    (setq lsp-keymap-prefix "C-c l") 
+
+    :config
+    (setq lsp-semantic-tokens-enable nil
+          lsp-auto-guess-root t
+          lsp-headerline-breadcrumb-enable nil
+          lsp-enable-snippet t
+          lsp-modeline-diagnostics-enable t
+          lsp-signature-auto-activate t
+          lsp-signature-render-documentation t)
+
+    :hook
+    ((python-mode . lsp-deferred)
+     (python-ts-mode . lsp-deferred)
+     (java-mode . lsp-deferred)
+     (rust-mode . lsp-deferred)
+      (c-mode . lsp-deferred)
+      (c++-mode . lsp-deferred)))
+
+
+    
+#+end_src
+*** Python
+#+begin_src emacs-lisp
+  
+(use-package lsp-mode
+  :commands (lsp lsp-deferred)
+  :config
+  (setq lsp-auto-guess-root t
+        lsp-headerline-breadcrumb-enable t
+        lsp-enable-snippet t
+        lsp-enable-on-type-formatting nil
+        lsp-enable-indentation nil)
+
+  :hook
+  ((java-mode . lsp-deferred)
+   (rust-mode . lsp-deferred)
+   (c-mode . lsp-deferred)
+   (c++-mode . lsp-deferred)
+   (c-ts-mode . lsp-deferred)
+   (c++-ts-mode . lsp-deferred)))
+
+(use-package lsp-pyright
+  :hook (python-mode . lsp-deferred))
+
+(let ((npm-global-bin (expand-file-name "~/.npm-global/bin")))
+  (setenv "PATH" (concat npm-global-bin ":" (getenv "PATH")))
+  (add-to-list 'exec-path npm-global-bin))
+
+#+end_src 
+
+
+** LSP UI
+
+#+begin_src emacs-lisp
+
+  (use-package lsp-ui
+     :hook (lsp-mode . lsp-ui-mode)
+     :custom
+     (lsp-ui-doc-position 'at-point)
+     (lsp-ui-doc-enable nil)              ;; Doc solo con K
+     (lsp-ui-doc-show-with-cursor nil)    
+     (lsp-ui-sideline-enable t)           
+     (lsp-ui-sideline-show-diagnostics t) ;; Errores en el lado
+     (lsp-ui-sideline-show-hover nil)
+     :config
+     (setq lsp-ui-sideline-show-diagnostics t
+           lsp-ui-sideline-delay 0.2))
+  
+	 #+end_src
+
+** Flycheck
+
+#+begin_src emacs-lisp
+
+   (use-package flycheck
+    :hook (prog-mode . flycheck-mode)
+    :config
+    (setq flycheck-display-errors-delay 0.1)
+    (setq flycheck-indication-mode 'left-fringe))
+
+  (use-package flycheck-posframe
+    :after flycheck
+    :hook (flycheck-mode . flycheck-posframe-mode)
+    :config
+    (setq flycheck-posframe-position 'point-bottom-left-corner))
+  
+  (global-flycheck-mode +1)
+
+    #+end_src 
+
+** Company
+#+begin_src emacs-lisp
+  ;; Asegurar que Company siempre esté activo
+  (use-package company
+    :ensure t
+    :defer 0
+    :init
+    (global-company-mode 1)
+    :config
+    (setq company-idle-delay 0.0        ;; autocompletado inmediato
+          company-minimum-prefix-length 1
+          company-show-numbers t
+          company-tooltip-align-annotations t))
+  
+  ;;(with-eval-after-load 'company
+    ;;(setq company-backends '((company-capf company-dabbrev-code company-files company-dabbrev))))
+#+end_src
+
+#+RESULTS:
+: newline-and-indent
+
+
+** Tree-sitter
+#+begin_src emacs-lisp
+
+    (use-package treesit-auto
+    :config 
+    (setq treesit-auto-install 'prompt)
+    (global-treesit-auto-mode))
+
+#+end_src
+
+
+
+
+* Lead Keys
+
+** Straigth
+ 
+#+begin_src emacs-lisp
+(setq warning-minimum-level :error)
+
+(straight-use-package 'general)
+
+(require 'general)
+
+(message "General loaded: %s" (featurep 'general))
+
+(general-create-definer my/leader-key
+  :keymaps '(normal insert visual emacs)
+  :prefix "SPC"
+  :global-prefix "C-SPC")
+
+#+end_src
+
+** Commands
+
+#+begin_src emacs-lisp
+
+  (my/leader-key
+    ;; Archivos
+    "f"  '(:ignore t :which-key "files")
+    "ff" '(find-file :which-key "find file")
+    "fs" '(save-buffer :which-key "save file")
+
+    ;; Buffers
+    "b"  '(:ignore t :which-key "buffers")
+    "bb" '(switch-to-buffer :which-key "switch buffer")
+    "bk" '(kill-buffer :which-key "kill buffer")
+
+    ;; Ventanas
+    "w"  '(:ignore t :which-key "windows")
+    "ws" '(split-window-below :which-key "split below")
+    "wv" '(split-window-right :which-key "split right")
+    "wd" '(delete-window :which-key "delete window")
+
+    ;; Proyecto / búsqueda
+    "p"  '(:ignore t :which-key "project")
+    "pf" '(project-find-file :which-key "find file in project")
+    "ps" '(project-switch-project :which-key "switch project")
+    
+    "r"  '(:ignore t :which-key "reload")
+    "rr" '((lambda () (interactive) 
+             (load-file (expand-file-name "init.el" user-emacs-directory))
+             (message "Config reloaded!"))
+           :which-key "reload config")
+   "rt" '((lambda () (interactive)
+             (org-babel-tangle-file (expand-file-name "config.org" user-emacs-directory))
+             (load-file (expand-file-name "config.el" user-emacs-directory))
+             (message "Config tangled and reloaded!"))
+           :which-key "tangle & reload"))
+ #+end_src 
+
+
+** Electric Pairs (Auto-close parentheses)
+
+#+begin_src emacs-lisp
+  ;; Enable automatic pairing of parentheses, brackets, quotes, etc.
+  (electric-pair-mode 1)
+
+  ;; Optional: customize which pairs to use
+  (setq electric-pair-pairs
+        '((?\" . ?\")
+          (?\' . ?\')
+          (?\{ . ?\})
+          (?\[ . ?\])
+          (?\( . ?\))))
+#+end_src
+
+* Doom keybinds
+
+#+begin_src emacs-lisp
+
+  ;; Variables de Doom
+  (defvar doom-leader-key "SPC")
+  (defvar doom-leader-alt-key "C-c")
+  (defvar +default-minibuffer-maps
+    (list minibuffer-local-map
+          minibuffer-local-completion-map))
+
+  ;; Funciones dummy para compatibilidad
+  (defalias '+default/search-project 'consult-ripgrep)
+  (defalias '+default/search-buffer 'consult-line)
+  (defalias '+lookup/definition 'xref-find-definitions)
+  (defalias '+lookup/references 'xref-find-references)
+  (defalias '+lookup/documentation 'eldoc-doc-buffer)
+  (defalias '+default/browse-project 'project-dired)
+  (defalias '+default/dired 'dired)
+
+  (defun doom/open-scratch-buffer ()
+    (interactive)
+    (switch-to-buffer "*scratch*"))
+
+  (defun doom/kill-all-buffers ()
+    (interactive)
+    (mapc 'kill-buffer (buffer-list)))
+
+  (defun doom/delete-this-file ()
+    (interactive)
+    (when buffer-file-name
+      (delete-file buffer-file-name)
+      (kill-buffer)))
+
+    
+    (use-package projectile
+    :straight t               ;; <--- importante para que straight lo instale
+    :config
+    (projectile-mode +1)
+    (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map))
+
+
+#+end_src
+
