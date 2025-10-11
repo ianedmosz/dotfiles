@@ -3,8 +3,16 @@
 #+DESCRIPTION: Pls just work on your ass
 
 
+* Font
+
+#+begin_src emacs-lisp :tangle yes
+
+(add-to-list 'default-frame-alist '(font . "JetBrainsMono Nerd Font-18"))
+  
+#+end_src
+
 * Package Manager
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 
   ;; Tell straight to NOT install built-in packages
   (straight-use-package '(project :type built-in))
@@ -20,7 +28,7 @@
 
 
 * Evil Mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
   (use-package evil
     :init
     (setq evil-want-integration t)
@@ -38,7 +46,7 @@
 #+end_src
 
 ** Which Key
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
   (use-package which-key
     :init (which-key-mode)
@@ -53,7 +61,7 @@
 * Emacs Aspect Stuff
 
 ** General setting
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle yes
 
 (menu-bar-mode -1)
  (scroll-bar-mode -1)
@@ -61,7 +69,7 @@
 #+end_src
 ** Org Modern
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
   (use-package org-modern
     :straight t
@@ -97,7 +105,7 @@
 
 ** Line Numbers
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
   (column-number-mode)
   (setq display-line-numbers-type 'relative)
@@ -116,7 +124,7 @@
 
 * Themes stuff 
 ** My temas
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
   (use-package catppuccin-theme
     :straight t
     :config
@@ -125,7 +133,7 @@
 * Menu Commands
 ** Menu For command
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
 (use-package vertico
   :init
@@ -150,7 +158,7 @@
 
 * LSP MODES
 ** LSP Mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp : :tangle yes
      (setq lsp-auto-guess-root t)
 
   (use-package lsp-mode
@@ -180,7 +188,7 @@
     
 #+end_src
 *** Python
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
   
 (use-package lsp-mode
   :commands (lsp lsp-deferred)
@@ -211,7 +219,7 @@
 
 ** LSP UI
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
   (use-package lsp-ui
      :hook (lsp-mode . lsp-ui-mode)
@@ -230,7 +238,7 @@
 
 ** Flycheck
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
    (use-package flycheck
     :hook (prog-mode . flycheck-mode)
@@ -249,7 +257,7 @@
     #+end_src 
 
 ** Company
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
   ;; Asegurar que Company siempre esté activo
   (use-package company
     :ensure t
@@ -271,7 +279,7 @@
 
 
 ** Tree-sitter
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
     (use-package treesit-auto
     :config 
@@ -287,7 +295,7 @@
 
 ** Straigth
  
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 (setq warning-minimum-level :error)
 
 (straight-use-package 'general)
@@ -305,7 +313,7 @@
 
 ** Commands
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
   (my/leader-key
     ;; Archivos
@@ -344,7 +352,7 @@
 
 ** Electric Pairs (Auto-close parentheses)
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
   ;; Enable automatic pairing of parentheses, brackets, quotes, etc.
   (electric-pair-mode 1)
 
@@ -359,7 +367,7 @@
 
 * Doom keybinds
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp  :tangle yes
 
   ;; Variables de Doom
   (defvar doom-leader-key "SPC")
@@ -401,3 +409,16 @@
 
 #+end_src
 
+
+* Doom Status line
+
+#+begin_src emacs-lisp :tangle yes
+  (use-package doom-modeline
+    :straight t
+    :ensure t
+    :init (doom-modeline-mode 1)
+    :config
+    (doom-modeline-mode 1))
+
+    
+#+end_src
