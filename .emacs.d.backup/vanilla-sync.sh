@@ -1,67 +1,174 @@
 #!/bin/bash
 
-# --- Configuration ---
+# =============================================================================
+# Script de Sync y Compilación Nativa Agresiva para Emacs
+# Similar a doom sync pero para configuraciones con straight.el
+# =============================================================================
+
+set -e  # Salir si hay errores
+
+# --- Configuración ---
 EMACS_SANDBOX_DIR="/home/ianedmosz/.emacs.d.backup"
-EMACS_EXEC="emacs" 
+EMACS_EXEC="emacs"
+COMP_JOBS=$(nproc)
+CONFIG_ORG="$EMACS_SANDBOX_DIR/config.org"
+INIT_FILE="$EMACS_SANDBOX_DIR/init.el"
 
-# Set compilation jobs to the total number of CPU cores for maximum speed
-COMP_JOBS=$(nproc) 
+# Colores para output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
 
-# --- Elisp Code for Full Sync and Aggressive Native Compilation ---
-EMACS_SYNC_EVAL="(progn
-    ;; Set the directory for package loading
-    (setq user-emacs-directory \"$EMACS_SANDBOX_DIR/\")
-    (setq native-comp-async-jobs-number $COMP_JOBS)
-    
-    ;; 1. Load Straight.el's bootstrap and main file
-    (let ((bootstrap-file (expand-file-name \"straight/repos/straight.el/bootstrap.el\" user-emacs-directory)))
-      (load-file bootstrap-file))
-    (load (expand-file-name \"straight/repos/straight.el/straight.el\" user-emacs-directory))
+# --- Funciones auxiliares ---
+log_info() {
+    echo -e "${BLUE}[INFO]${NC} $1"
+}
 
-    ;; 2. Load Org and tangle configuration
-    (require 'org) 
-    (message \"Tangling and loading config.org to initialize Straight.el requests...\")
-    
-    (setq org-babel-default-directory user-emacs-directory)
-    (setq org-confirm-babel-evaluate nil) ; Prevent prompts
-    
-    (org-babel-tangle-file \"config.org\" (expand-file-name \"init.el\" user-emacs-directory) 'nil) 
-    
-    ;; *** DEFINITIVE FIX: Wrap tangled content for safe loading (resolves 'End of file during parsing') ***
-    (message \"Loading corrected configuration content...\")
-    (let ((init-path (expand-file-name \"init.el\" user-emacs-directory)))
-      ;; Wrap content in a lambda for safe evaluation
-      (with-temp-buffer
-        (insert \"(lambda () \") 
-        (insert-file-contents init-path)
-        (insert \")\\n\")       
-        (eval-buffer)))
-    
-    ;; 3. THE SYNC FIX: Force package processing
-    (message \"Starting package installation/sync...\")
-    (package-install-selected-packages t)
-    
-    ;; 4. Aggressively initiate native compilation for the entire config
-    (message \"Starting aggressive native compilation on %d cores...\" native-comp-async-jobs-number)
-    (native-compile-async user-emacs-directory 'recursively)
-    
-    ;; 5. Clean up old compiled files (Conditional call to fix 'void-function' error)
-    (when (fboundp 'native-comp-cleanup)
-      (native-comp-cleanup))
-    
-    (kill-emacs))"
+log_success() {
+    echo -e "${GREEN}[SUCCESS]${NC} $1"
+}
 
-# --- Execution (remains the same) ---
+log_warning() {
+    echo -e "${YELLOW}[WARNING]${NC} $1"
+}
 
-echo "Starting FULL Sync and AGGRESSIVE Native Compilation of $EMACS_SANDBOX_DIR..."
-echo "Using $COMP_JOBS CPU cores (System load will be high)..."
+log_error() {
+    echo -e "${RED}[ERROR]${NC} $1"
+}
 
-# Run Emacs in batch mode to execute the sync/compilation
-"$EMACS_EXEC" --batch --eval "$EMACS_SYNC_EVAL" 
+# --- Validaciones previas ---
+if [ ! -d "$EMACS_SANDBOX_DIR" ]; then
+    log_error "El directorio $EMACS_SANDBOX_DIR no existe"
+    exit 1
+fi
 
-if [ $? -eq 0 ]; then
-    echo "Full Sync and Compilation initiated successfully."
-    echo "The heavy work is now happening in the background. Check *Async-native-compile-log* when running emacs-vanilla."
+if [ ! -f "$CONFIG_ORG" ]; then
+    log_warning "No se encontró config.org en $EMACS_SANDBOX_DIR"
+fi
+
+# --- Código Elisp para Sync y Compilación ---
+read -r -d '' EMACS_SYNC_EVAL <<'EOF' || true
+(let ((user-emacs-directory (expand-file-name (getenv "EMACS_DIR")))
+      (native-jobs (string-to-number (getenv "COMP_JOBS")))
+      (config-org (expand-file-name "config.org" (getenv "EMACS_DIR")))
+      (init-file (expand-file-name "init.el" (getenv "EMACS_DIR"))))
+  
+  (message "=== Iniciando Sync y Compilación Nativa ===")
+  (message "Directorio: %s" user-emacs-directory)
+  (message "CPU cores: %d" native-jobs)
+  
+  ;; Configurar compilación nativa
+  (when (and (fboundp 'native-comp-available-p)
+             (native-comp-available-p))
+    (setq native-comp-async-jobs-number native-jobs)
+    (setq native-comp-speed 2)
+    (setq native-comp-async-report-warnings-errors nil)
+    (message "Compilación nativa habilitada con %d jobs" native-jobs))
+  
+  ;; Verificar que straight.el esté disponible
+  (let ((bootstrap-file 
+         (expand-file-name "straight/repos/straight.el/bootstrap.el" 
+                          user-emacs-directory)))
+    (unless (file-exists-p bootstrap-file)
+      (message "ERROR: No se encontró straight.el bootstrap")
+      (kill-emacs 1))
+    
+    ;; Cargar straight.el
+    (load bootstrap-file nil 'nomessage)
+    (message "Straight.el cargado correctamente"))
+  
+  ;; Cargar straight.el principal
+  (require 'straight)
+  
+  ;; Si existe config.org, procesarlo
+  (when (file-exists-p config-org)
+    (message "Procesando config.org...")
+    (require 'org)
+    (setq org-confirm-babel-evaluate nil)
+    
+    ;; Tangle config.org a init.el
+    (condition-case err
+        (progn
+          (org-babel-tangle-file config-org init-file)
+          (message "Config.org tangled exitosamente"))
+      (error 
+       (message "Error al hacer tangle: %s" (error-message-string err))
+       (kill-emacs 1))))
+  
+  ;; Cargar init.el de forma segura
+  (when (file-exists-p init-file)
+    (message "Cargando configuración desde init.el...")
+    (condition-case err
+        (load init-file nil 'nomessage)
+      (error 
+       (message "Error al cargar init.el: %s" (error-message-string err))
+       (kill-emacs 1))))
+  
+  ;; Ejecutar straight-check-all para sincronizar paquetes
+  (message "Sincronizando paquetes con straight.el...")
+  (condition-case err
+      (progn
+        ;; Freezar el estado actual de los paquetes
+        (when (fboundp 'straight-freeze-versions)
+          (straight-freeze-versions))
+        
+        ;; Actualizar repositorios si es necesario
+        (when (fboundp 'straight-pull-all)
+          (straight-pull-all))
+        
+        (message "Sincronización de paquetes completada"))
+    (error 
+     (message "Advertencia durante sync: %s" (error-message-string err))))
+  
+  ;; Compilación nativa agresiva
+  (when (and (fboundp 'native-comp-available-p)
+             (native-comp-available-p))
+    (message "Iniciando compilación nativa agresiva...")
+    
+    ;; Compilar directorio de straight
+    (let ((straight-dir (expand-file-name "straight/build" user-emacs-directory)))
+      (when (file-directory-p straight-dir)
+        (message "Compilando paquetes de straight...")
+        (native-compile-async straight-dir 'recursively)))
+    
+    ;; Compilar configuración principal
+    (when (file-exists-p init-file)
+      (message "Compilando init.el...")
+      (native-compile-async init-file))
+    
+    ;; Limpiar archivos antiguos
+    (when (fboundp 'native-compile-prune-cache)
+      (message "Limpiando cache antigua...")
+      (native-compile-prune-cache))
+    
+    (message "Compilación nativa iniciada en background"))
+  
+  (message "=== Proceso completado exitosamente ===")
+  (kill-emacs 0))
+EOF
+
+# --- Ejecución ---
+log_info "Iniciando SYNC completo y compilación nativa agresiva"
+log_info "Directorio: $EMACS_SANDBOX_DIR"
+log_info "Usando $COMP_JOBS cores de CPU (la carga del sistema será alta)"
+echo ""
+
+# Exportar variables de entorno para el código elisp
+export EMACS_DIR="$EMACS_SANDBOX_DIR"
+export COMP_JOBS="$COMP_JOBS"
+
+# Ejecutar Emacs en modo batch
+if "$EMACS_EXEC" --batch --eval "$EMACS_SYNC_EVAL" 2>&1 | tee /tmp/emacs-sync.log; then
+    echo ""
+    log_success "Sync y compilación iniciados exitosamente"
+    log_info "La compilación nativa continúa en background"
+    log_info "Puedes monitorear el progreso en *Async-native-compile-log*"
+    echo ""
+    log_info "Para ver los logs completos: cat /tmp/emacs-sync.log"
 else
-    echo "Sync/Compilation failed. Check logs."
+    echo ""
+    log_error "El proceso falló. Revisa los logs en /tmp/emacs-sync.log"
+    exit 1
 fi
