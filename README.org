@@ -10,12 +10,13 @@
 
 *** ~Rofi~ as app launcher and wallpaper launcher
 
-*** Plugins in waybar:
-**** Clock
-**** Cava
-**** Wallpaper Changer
-**** Wayber theme changer
-**** PowerManagement
-**** Bluethooth
-**** Powermenu
-**** Directory at moment
+*** Plugins in Waybar
+- Clock
+- Cava
+- Wallpaper Changer
+- Waybar Theme Changer
+- Power Management
+- Bluetooth
+- Powermenu
+- Directory (Current)
+
