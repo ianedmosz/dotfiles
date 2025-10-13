@@ -112,7 +112,7 @@ input {
 // https://yalter.github.io/niri/Configuration:-Layout
 layout {
     // Set gaps around windows in logical pixels.
-    gaps 16
+    gaps 4
 
     // When to center a column when changing focus, options are:
     // - "never", default behavior, focusing an off-screen column will keep at the left
@@ -146,7 +146,6 @@ layout {
     // By default focus ring and border are rendered as a solid background rectangle
     // behind windows. That is, they will show up through semitransparent windows.
     // This is because windows using client-side decorations can have an arbitrary shape.
-    //
     // If you don't like that, you should uncomment `prefer-no-csd` below.
     // Niri will draw focus ring and border *around* windows that agree to omit their
     // client-side decorations.
@@ -157,7 +156,7 @@ layout {
     // You can change how the focus ring looks.
 	// >>> THEME_START
 focus-ring {
-        width 3
+        width 2
         active-color "#bd93f9"
         inactive-color "#140a1d"
     }
@@ -229,7 +228,7 @@ focus-ring {
 
 hotkey-overlay {
     // Uncomment this line to disable the "Important Hotkeys" pop-up at startup.
-    // skip-at-startup
+    skip-at-startup
 }
 
 // Uncomment this line to ask the clients to omit their client-side decorations if possible.
@@ -237,7 +236,7 @@ hotkey-overlay {
 // Additionally, clients will be informed that they are tiled, removing some client-side rounded corners.
 // This option will also fix border/focus ring drawing behind some semitransparent windows.
 // After enabling or disabling this, you need to restart the apps for this to take effect.
-// prefer-no-csd
+prefer-no-csd
 
 // You can change the path where screenshots are saved.
 // A ~ at the front will be expanded to the home directory.
@@ -287,6 +286,13 @@ window-rule {
     opacity 0.96
 }
 
+
+window-rule {
+    match is-focused=true
+
+    opacity 1.0
+}
+
 window-rule {
     // Border radius 
     clip-to-geometry true
@@ -331,9 +337,8 @@ binds {
 
     // Suggested binds for running programs: terminal, app launcher, screen locker.
     Mod+Return hotkey-overlay-title="Open a Terminal: alacritty" { spawn "kitty"; }
-    Mod+D hotkey-overlay-title="Run an Application: fuzzel" { spawn "wofi"; }
     Super+Alt+L hotkey-overlay-title="Lock the Screen: swaylock" { spawn "swaylock"; }
-
+    Mod+D hotkey-overlay-title="Run an Application: rofi" {spawn "rofi" "-show" "drun";}
     // Use spawn-sh to run a shell command. Do this if you need pipes, multiple commands, etc.
     // Note: the entire command goes as a single argument. It's passed verbatim to `sh -c`.
     // For example, this is a standard bind to toggle the screen reader (orca).
@@ -589,20 +594,53 @@ binds {
     Mod+Shift+P { power-off-monitors; }
 	Mod+Shift+W { spawn-sh "$HOME/.config/niri/scripts/set_wallpaper.sh"; }
 	Mod+Shift+T { spawn-sh "$HOME/.config/niri/scripts/theme_setter.sh"; }
-	Mod+Ctrl+T { spawn-sh "$HOME/.config/fuzzel/fuzzel-theme-switch.sh"; }
-
+	Mod+Shift+B { spawn-sh "$HOME/.config/niri/scripts/profile_switcher.sh"; }
 }
 
+spawn-at-startup "swww-daemon"
+spawn-at-startup "bash" "-c" "$HOME/.config/niri/scripts/swaybg.sh &"
+spawn-at-startup "bash" "-c" "~/.config/waybar/scripts/launch.sh &"
 spawn-at-startup "bash" "-c" "$HOME/.config/niri/scripts/load_wallpaper.sh &"
 spawn-at-startup  "mako"
 spawn-at-startup "/usr/bin/gnome-keyring-daemon" "--start" "--components=pkcs11,secrets,ssh,gpg"
+spawn-at-startup "bash" "-c" "eww daemon && sleep 1 && eww open dock_trigger"
+
+layer-rule {
+  match namespace="^wallpaper$" 
+  place-within-backdrop true
+}
 
 
+window-rule {
+    match app-id=r#"pavucontrol"#
+    open-floating true
+}
+
+window-rule {
+    match app-id=r#"Rofi"#
+    open-floating true
+
+}
 
 
+window-rule {
+    match app-id=r#"blueman-manager"#
+    open-floating true
+}
 
+// Open 5 workspaces
 workspace "1"
 workspace "2"
 workspace "3"
-workspace "4"
-workspace "5"
+
+
+window-rule {
+    match app-id="kitty"
+    opacity 0.95
+}
+
+window-rule {
+    match app-id="emacs"
+    opacity 0.97 
+}
+
