@@ -35,13 +35,16 @@
 
 
 
-;; Normal: indent línea o bloque
+;; Normal: indent l�nea o bloque
 (map! :n "<leader>i" #'evil-indent)
 
-;; Visual: indent selección
+;; Visual: indent selecci�n
 (map! :v "<leader>i" #'evil-indent)
 
 (map! :leader
       "f n" (lambda ()
               (interactive)
               (find-file (expand-file-name org-directory))))
+
+(map! :leader
+      :desc "Execute code action" "c a" #'lsp-execute-code-action)
