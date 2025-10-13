@@ -2,11 +2,49 @@
 #+AUTHOR: Ianedmosz
 #+DESCRIPTION: Pls just work on your ass
 
+* LSP BOOSTER
+#+begin_src emacs-lisp
+;;(setenv "LSP_USE_PLISTS" "true")
+(setq lsp-use-plists nil)
+
+(setq gc-cons-threshold 100000000           ;
+      read-process-output-max (* 3 1024 1024))
+
+(setq native-comp-speed 3)
+
+;; Recompile bundled Emacs Lisp files
+(when (and (fboundp 'native-compile-async)
+           (file-directory-p "/usr/lib/emacs/30.2/native-lisp"))
+  (native-compile-async "/usr/lib/emacs/30.2/native-lisp" 'recursively))
+
+(setq native-comp-compiler-options
+      '("-march=native" "-mtune=native" "-Ofast" "-g0"
+        "-fno-finite-math-only"
+        "-fgraphite-identity" "-floop-nest-optimize"
+        "-fdevirtualize-at-ltrans" "-fipa-pta"
+        "-fno-semantic-interposition"
+        "-flto=auto" "-fuse-linker-plugin"))
+
+(setq native-comp-driver-options
+      '("-march=native" "-mtune=native" "-Ofast" "-g0"
+        "-fno-finite-math-only"
+        "-fgraphite-identity" "-floop-nest-optimize"
+        "-fdevirtualize-at-ltrans" "-fipa-pta"
+        "-fno-semantic-interposition"
+        "-flto=auto" "-fuse-linker-plugin"))
+
+(setq native-comp-async-report-warnings-errors nil)
+
+
+#+end_src
+
+#+RESULTS:
+: t
 
 * Font Stuff
 
 #+begin_src emacs-lisp
-
+(setq-default evil-shift-width 4)
 (setq doom-font (font-spec :family "JetBrainsMono Nerd Font" :size 18))
 ;; Set the background transparency for the currently selected frame
 ;;(set-frame-parameter nil 'alpha-background 95)
@@ -14,7 +52,9 @@
 ;; Set the background transparency for all new frames that are created
 ;;(add-to-list 'default-frame-alist '(alpha-background . 95))
 
+(setq package-quickstart t)
 
+(setq use-package-always-defer t)
 #+end_src
 
 * Icons
@@ -28,6 +68,9 @@
 #+end_src
 * Treesit
 #+begin_src emacs-lisp
+
+(add-hook 'tree-sitter-after-on-hook #'tree-sitter-hl-mode)
+
 (add-hook 'rust-mode-hook #'tree-sitter-mode)
 
 (add-hook 'C-mode-hook #'tree-sitter-mode)
@@ -44,7 +87,11 @@
          (c++-mode . c++-ts-mode)
          (java-mode . java-ts-mode)
          (rust-mode . rust-ts-mode)
-         (python-mode . python-ts-mode))
+         (python-mode . python-ts-mode)
+         (json-mode . json-ts-mode)
+         (css-mode . css-ts-mode)
+         (html-mode . html-ts-mode)
+         (kdl-mode . kdl-ts-mode))
        major-mode-remap-alist))
 
 
@@ -55,17 +102,13 @@
 
 * Lsp
 #+begin_src emacs-lisp
-;;(setq lsp-semantic-tokens-enable t)
-;;(after! lsp-mode
-  ;;(setq lsp-semantic-tokens-enable t)
-  ;;(setq lsp-enable-semantic-highlighting t))
-
-
 
 (global-flycheck-mode +1)
 
 (after! lsp-mode
   (setq lsp-semantic-tokens-enable nil
+        lsp-idle-delay 0.5
+         lsp-completion-provider :none
     ;;    lsp-enable-semantic-highlighting t
         lsp-auto-guess-root t
         lsp-headerline-breadcrumb-enable nil
@@ -74,12 +117,17 @@
         lsp-signature-auto-activate t
         lsp-signature-render-documentation t))
 
+
+(after! lsp-java
+  (setq lsp-java-workspace-dir (expand-file-name "~/.emacs.d/.local/lsp-java-workspace/")
+        lsp-java-workspace-cache-dir (expand-file-name "~/.emacs.d/.local/lsp-java-workspace/.cache/"))
+
+  (setq lsp-file-watch-threshold 5000
+        lsp-enable-file-watchers t  ; Keep enabled but limited
+        lsp-java-import-gradle-enabled nil  ; Disable if not using Gradle
+        lsp-java-import-maven-enabled nil)) ; Disable if not using Maven
+
 #+end_src
-** Eglot
-#+begin_src emacs-lisp
-#+end_src
-#+RESULTS:
-| doom-modeline-env-setup-rust | eglot-ensure | lsp-deferred |
 
 ** LSP PYTHON
 #+begin_src emacs-lisp
@@ -97,7 +145,7 @@
         lsp-headerline-breadcrumb-enable t
         lsp-enable-snippet t))
 
-(dolist (mode '(python-mode python-ts-mode java-mode rust-mode))
+(dolist (mode '(python-mode python-ts-mode java-mode java-ts-mode rust-mode))
   (add-hook (intern (concat (symbol-name mode) "-hook")) #'lsp-deferred))
 
 
@@ -108,19 +156,22 @@
   (setq lsp-enable-on-type-formatting nil
         lsp-enable-indentation nil))
 
+(after! lsp-java
+  (dolist (hook '(java-mode-hook java-ts-mode-hook))
+    (add-hook hook #'lsp! 'append)))
 #+end_src
 
 
 
 
 #+RESULTS:
+| er/add-cc-mode-expansions | lsp-deferred | tree-sitter-mode | #[nil ((setq lsp-headerline-breadcrumb-enable nil)) nil] | +java-android-mode-maybe-h | +evil-embrace-angle-bracket-modes-hook-h |
 
 ** Lsp ui
 #+begin_src emacs-lisp
 
 (setq lsp-ui-doc-enable t)
 (setq lsp-ui-doc-show-with-mouse t)
-
 
 #+end_src
 
@@ -139,7 +190,7 @@
 ** Flycheck
 
 #+begin_src emacs-lisp
-  (setq flycheck-display-errors-delay 0.1
+  (setq flycheck-display-errors-delay 0.2
         flycheck-indication-mode 'left-fringe
         flycheck-highlighting-mode 'lines
         flycheck-global-modes '(not org-mode text-mode)
@@ -196,18 +247,18 @@
   :hook ((org-mode . org-modern-mode)
          (org-agenda-finalize . org-modern-agenda))
   :config
-  (setq
-    org-auto-align-tags nil
-    org-tags-column 0
-    org-catch-invisible-edits 'show-and-error
-    org-special-ctrl-a/e t
-    org-insert-heading-respect-content t
-    org-hide-emphasis-markers t
-    org-pretty-entities t
-    org-agenda-tags-column 0
-    org-ellipsis "…"
+    (setq
+     org-auto-align-tags nil
+     org-tags-column 0
+     org-catch-invisible-edits 'show-and-error
+     org-special-ctrl-a/e t
+     org-insert-heading-respect-content t
+     org-hide-emphasis-markers t
+     org-pretty-entities t
+     org-agenda-tags-column 0
+     org-ellipsis "…"
     org-modern-star '("●" "○" "◉" "◇" "◆"))
-  )
+    )
 
 
   (set-face-attribute 'default nil
@@ -224,13 +275,39 @@
 
 * Company
 #+begin_src emacs-lisp
-
-(add-hook 'after-init-hook 'global-company-mode)
-(setq company-backends '(company-files))
-
-(setq company-backends '((company-capf :with company-files)))
-
-(set-company-backend! 'org-mode '(company-files company-capf))
+  (use-package company
+    :ensure t
+    :defer 0
+    :init
+    (global-company-mode 1)
+    :config
+    (setq company-idle-delay 0.5
+          company-minimum-prefix-length 3
+          company-show-numbers t
+          company-show-quick-access nil
+          company-require-match nil
+          company-tooltip-align-annotations t))
 
 
 #+end_src
+
+* Treemacs
+
+#+begin_src emacs-lisp
+(use-package treemacs-nerd-icons
+  :after treemacs
+  :config
+  (treemacs-load-theme "nerd-icons"))
+
+(setq doom-themes-treemacs-theme "doom-colors")
+#+end_src
+
+* OrgMode
+
+#+begin_src emacs-lisp
+(setq org-mobile-inbox-for-pull "~/org/*.org")
+(setq org-mobile-directory "~/Dropbox/Apps/MobileOrg")
+
+#+end_src
+
+#+RESULTS:
