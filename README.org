@@ -2,15 +2,15 @@
 #+Author: Ianedmsz
 #+Description:
 
-* DOTFILEs
+* DotFiles
 
-*** Window manager is niri
+*** Window manager is ~niri~
 
-*** Editor of use is Doom emacs or nvim
+*** Editor of use is ~Doom emacs~ or nvim
 
-*** Rofi as app launcher and wallpaper launcher
+*** ~Rofi~ as app launcher and wallpaper launcher
 
-*** Plugins in waybar
+*** Plugins in waybar:
 **** Clock
 **** Cava
 **** Wallpaper Changer
