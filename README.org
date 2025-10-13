@@ -2,8 +2,6 @@
 #+Author: Ianedmsz
 #+Description:
 
-* DotFiles
-
 *** Window manager is ~niri~
 
 *** Editor of use is ~Doom emacs~ or nvim
