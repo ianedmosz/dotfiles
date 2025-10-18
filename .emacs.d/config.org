@@ -1,0 +1,390 @@
+
+
+* Perfomance
+
+#+begin_src emacs-lisp
+
+(setq gc-cons-threshold (* 50 1000 1000))
+
+#+end_src 
+
+
+* Show startup time 
+
+
+#+begin_src emacs-lisp
+
+(defun start/display-startup-time ()
+  (message "Emacs loaded in %s with %d garbage collections."
+           (format "%.2f seconds"
+                   (float-time
+					(time-subtract after-init-time before-init-time)))
+           gcs-done))
+
+(add-hook 'emacs-startup-hook #'start/display-startup-time)
+
+
+#+end_src
+
+
+* Emacs Defautls
+
+
+#+begin_src emacs-lisp
+
+
+(use-package emacs
+  :custom
+  (menu-bar-mode nil)         ;; Disable the menu bar
+  (scroll-bar-mode nil)       ;; Disable the scroll bar
+  (tool-bar-mode nil)         ;; Disable the tool bar
+  (inhibit-startup-screen t)  ;; Disable welcome screen
+
+  (delete-selection-mode t)   ;; Select text and delete it by typing.
+  (electric-indent-mode nil)  ;; Turn off the weird indenting that Emacs does by default.
+  (electric-pair-mode t)      ;; Turns on automatic parens pairing
+
+  (blink-cursor-mode nil)     ;; Don't blink cursor
+  (global-auto-revert-mode t) ;; Automatically reload file and show changes if the file has changed
+
+  ;;(dired-kill-when-opening-new-dired-buffer t) ;; Dired don't create new buffer
+  (recentf-mode t) ;; Enable recent file mode
+
+  ;;(global-visual-line-mode t)           ;; Enable truncated lines
+  (display-line-numbers-type 'relative) ;; Relative line numbers
+  (global-display-line-numbers-mode t)  ;; Display line numbers
+
+  (mouse-wheel-progressive-speed nil) ;; Disable progressive speed when scrolling
+  (scroll-conservatively 10) ;; Smooth scrolling
+  ;;(scroll-margin 8)
+
+  (tab-width 4)
+
+  (make-backup-files nil) ;; Stop creating ~ backup files
+  (auto-save-default nil) ;; Stop creating # auto save files
+  :hook
+  (prog-mode . (lambda () (hs-minor-mode t))) ;; Enable folding hide/show globally
+  :config
+  ;; Move customization variables to a separate file and load it, avoid filling up init.el with unnecessary variables
+  (setq custom-file (locate-user-emacs-file "custom-vars.el"))
+  (load custom-file 'noerror 'nomessage)
+  :bind (
+         ([escape] . keyboard-escape-quit) ;; Makes Escape quit prompts (Minibuffer Escape)
+         ;; Zooming In/Out
+         ("C-+" . text-scale-increase)
+         ("C--" . text-scale-decrease)
+         ("<C-wheel-up>" . text-scale-increase)
+         ("<C-wheel-down>" . text-scale-decrease)
+         )
+  )
+
+#+end_src
+
+
+* Evil mode
+
+#+begin_src emacs-lisp
+
+(use-package evil
+  :init
+  (evil-mode)
+  :config
+  (evil-set-initial-state 'eat-mode 'insert) ;; Set initial state in eat terminal to insert mode
+  :custom
+  (evil-want-keybinding nil)    ;; Disable evil bindings in other modes (It's not consistent and not good)
+  (evil-want-C-u-scroll t)      ;; Set C-u to scroll up
+  (evil-want-C-i-jump nil)      ;; Disables C-i jump
+  (evil-undo-system 'undo-redo) ;; C-r to redo
+  ;; Unmap keys in 'evil-maps. If not done, org-return-follows-link will not work
+  :bind (:map evil-motion-state-map
+              ("SPC" . nil)
+              ("RET" . nil)
+              ("TAB" . nil)))
+(use-package evil-collection
+  :after evil
+  :config
+  ;; Setting where to use evil-collection
+  (setq evil-collection-mode-list '(dired ibuffer magit corfu vertico consult info))
+  (evil-collection-init))
+
+#+end_src
+
+
+* General Keybinds 
+
+
+#+begin_src emacs-lisp
+
+(use-package general
+  :config
+  ;; (general-evil-setup) ;; <- evil
+  ;; Set up 'C-SPC' as the leader key
+  (general-create-definer start/leader-keys
+    ;; :states '(normal insert visual motion emacs) ;; <- evil
+    :keymaps 'override
+    :prefix "C-SPC"
+    :global-prefix "C-SPC") ;; Set global leader key so we can access our keybindings from any state
+
+  (start/leader-keys
+    "." '(find-file :wk "Find file")
+    "TAB" '(comment-line :wk "Comment lines")
+    "q" '(flymake-show-buffer-diagnostics :wk "Flymake buffer diagnostic")
+    "c" '(eat :wk "Eat terminal")
+    "p" '(projectile-command-map :wk "Projectile")
+    "s p" '(projectile-discover-projects-in-search-path :wk "Search for projects"))
+
+  (start/leader-keys
+    "s" '(:ignore t :wk "Search")
+    "s c" '((lambda () (interactive) (find-file "~/.config/emacs/init.org")) :wk "Find emacs Config")
+    "s r" '(consult-recent-file :wk "Search recent files")
+    "s f" '(consult-fd :wk "Search files with fd")
+    "s g" '(consult-ripgrep :wk "Search with ripgrep")
+    "s l" '(consult-line :wk "Search line")
+    "s i" '(consult-imenu :wk "Search Imenu buffer locations")) ;; This one is really cool
+
+  (start/leader-keys
+    "d" '(:ignore t :wk "Buffers & Dired")
+    "d s" '(consult-buffer :wk "Switch buffer")
+    "d k" '(kill-current-buffer :wk "Kill current buffer")
+    "d i" '(ibuffer :wk "Ibuffer")
+    "d n" '(next-buffer :wk "Next buffer")
+    "d p" '(previous-buffer :wk "Previous buffer")
+    "d r" '(revert-buffer :wk "Reload buffer")
+    "d v" '(dired :wk "Open dired")
+    "d j" '(dired-jump :wk "Dired jump to current"))
+
+  (start/leader-keys
+    "e" '(:ignore t :wk "Languages")
+    "e e" '(eglot-reconnect :wk "Eglot Reconnect")
+    "e d" '(eldoc-doc-buffer :wk "Eldoc Buffer")
+    "e f" '(eglot-format :wk "Eglot Format")
+    "e l" '(consult-flymake :wk "Consult Flymake")
+    "e r" '(eglot-rename :wk "Eglot Rename")
+    "e i" '(xref-find-definitions :wk "Find definition")
+    "e v" '(:ignore t :wk "Elisp")
+    "e v b" '(eval-buffer :wk "Evaluate elisp in buffer")
+    "e v r" '(eval-region :wk "Evaluate elisp in region"))
+
+  (start/leader-keys
+    "g" '(:ignore t :wk "Git")
+    "g s" '(magit-status :wk "Magit status"))
+
+  (start/leader-keys
+    "h" '(:ignore t :wk "Help") ;; To get more help use C-h commands (describe variable, function, etc.)
+    "h q" '(save-buffers-kill-emacs :wk "Quit Emacs and Daemon")
+    "h r" '((lambda () (interactive)
+              (load-file "~/.config/emacs/init.el"))
+            :wk "Reload Emacs config"))
+
+  (start/leader-keys
+    "t" '(:ignore t :wk "Toggle")
+    "t t" '(visual-line-mode :wk "Toggle truncated lines (wrap)")
+    "t l" '(display-line-numbers-mode :wk "Toggle line numbers"))
+  )
+
+;; Fix general.el leader key not working instantly in messages buffer with evil mode
+;; (use-package emacs
+;;   :ghook ('after-init-hook
+;;           (lambda (&rest _)
+;;             (when-let ((messages-buffer (get-buffer "*Messages*")))
+;;               (with-current-buffer messages-buffer
+;;                 (evil-normalize-keymaps))))
+;;           nil nil t)
+;;   )
+
+#+end_src
+
+
+
+* Theme
+
+
+#+begin_src emacs-lisp
+
+(use-package catppuccin-theme
+  :ensure t
+  :init
+  (setq catppuccin-flavor 'mocha) 
+  :config
+  (load-theme 'catppuccin t t)
+  (catppuccin-reload))
+
+#+end_src
+
+* Doom line
+
+#+begin_src emacs-lisp
+
+(use-package doom-modeline
+  :custom
+  (doom-modeline-height 25) ;; Set modeline height
+  :hook (after-init . doom-modeline-mode))
+
+#+end_src
+
+
+* Nerd Icons
+
+#+begin_src emacs-lisp
+
+(use-package nerd-icons
+  :if (display-graphic-p))
+
+(use-package nerd-icons-dired
+  :hook (dired-mode . (lambda () (nerd-icons-dired-mode t))))
+
+(use-package nerd-icons-ibuffer
+  :hook (ibuffer-mode . nerd-icons-ibuffer-mode))
+
+
+#+end_src
+
+* Which Key 
+
+#+begin_src emacs-lisp
+
+(use-package which-key
+  :ensure nil ;; Don't install which-key because it's now built-in
+  :init
+  (which-key-mode 1)
+  :diminish
+  :custom
+  (which-key-side-window-location 'bottom)
+  (which-key-sort-order #'which-key-key-order-alpha) ;; Same as default, except single characters are sorted alphabetically
+  (which-key-sort-uppercase-first nil)
+  (which-key-add-column-padding 1) ;; Number of spaces to add to the left of each column
+  (which-key-min-display-lines 6)  ;; Increase the minimum lines to display because the default is only 1
+  (which-key-idle-delay 0.8)       ;; Set the time delay (in seconds) for the which-key popup to appear
+  (which-key-max-description-length 25)
+  (which-key-allow-imprecise-window-fit nil)) ;; Fixes which-key window slipping out in Emacs Daemon
+
+#+end_src
+
+
+* Consult 
+
+
+#+begin_src emacs-lisp
+
+(use-package consult
+  ;; Enable automatic preview at point in the *Completions* buffer. This is
+  ;; relevant when you use the default completion UI.
+  :hook (completion-list-mode . consult-preview-at-point-mode)
+  :init
+  ;; Optionally configure the register formatting. This improves the register
+  ;; preview for `consult-register', `consult-register-load',
+  ;; `consult-register-store' and the Emacs built-ins.
+  (setq register-preview-delay 0.5
+        register-preview-function #'consult-register-format)
+
+  ;; Optionally tweak the register preview window.
+  ;; This adds thin lines, sorting and hides the mode line of the window.
+  (advice-add #'register-preview :override #'consult-register-window)
+
+  ;; Use Consult to select xref locations with preview
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  :config
+  ;; Optionally configure preview. The default value
+  ;; is 'any, such that any key triggers the preview.
+  ;; (setq consult-preview-key 'any)
+  ;; (setq consult-preview-key "M-.")
+  ;; (setq consult-preview-key '("S-<down>" "S-<up>"))
+
+  ;; For some commands and buffer sources it is useful to configure the
+  ;; :preview-key on a per-command basis using the `consult-customize' macro.
+  ;; (consult-customize
+  ;; consult-theme :preview-key '(:debounce 0.2 any)
+  ;; consult-ripgrep consult-git-grep consult-grep
+  ;; consult-bookmark consult-recent-file consult-xref
+  ;; consult--source-bookmark consult--source-file-register
+  ;; consult--source-recent-file consult--source-project-recent-file
+  ;; :preview-key "M-."
+  ;; :preview-key '(:debounce 0.4 any))
+
+  ;; By default `consult-project-function' uses `project-root' from project.el.
+  ;; Optionally configure a different project root function.
+   ;;;; 1. project.el (the default)
+  ;; (setq consult-project-function #'consult--default-project--function)
+   ;;;; 2. vc.el (vc-root-dir)
+  ;; (setq consult-project-function (lambda (_) (vc-root-dir)))
+   ;;;; 3. locate-dominating-file
+  ;; (setq consult-project-function (lambda (_) (locate-dominating-file "." ".git")))
+   ;;;; 4. projectile.el (projectile-project-root)
+  (autoload 'projectile-project-root "projectile")
+  (setq consult-project-function (lambda (_) (projectile-project-root)))
+   ;;;; 5. No project support
+  ;; (setq consult-project-function nil)
+  )
+
+
+#+end_src
+
+
+* vertico
+
+#+begin_src emacs-lisp
+
+(use-package vertico
+  :init
+  (vertico-mode))
+
+(savehist-mode) ;; Enables save history mode
+
+(use-package marginalia
+  :after vertico
+  :init
+  (marginalia-mode))
+
+(use-package nerd-icons-completion
+  :after marginalia
+  :config
+  (nerd-icons-completion-mode)
+  :hook
+  ('marginalia-mode-hook . 'nerd-icons-completion-marginalia-setup))
+
+#+end_src
+
+
+* Helpful
+
+#+begin_src emacs-lisp
+
+(use-package helpful
+  :bind
+  ;; Note that the built-in `describe-function' includes both functions
+  ;; and macros. `helpful-function' is functions only, so we provide
+  ;; `helpful-callable' as a drop-in replacement.
+  ("C-h f" . helpful-callable)
+  ("C-h v" . helpful-variable)
+  ("C-h k" . helpful-key)
+  ("C-h x" . helpful-command)
+  )
+
+
+#+end_src
+
+
+* Rainbow Delim 
+
+#+begin_src emacs-lisp
+
+(use-package rainbow-delimiters
+  :hook (prog-mode . rainbow-delimiters-mode))
+
+#+end_src 
+
+
+
+
+* Perfomance
+
+
+#+begin_src emacs-lisp
+
+;; Make gc pauses faster by decreasing the threshold.
+(setq gc-cons-threshold (* 2 1000 1000))
+;; Increase the amount of data which Emacs reads from the process
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+
+#+end_src
