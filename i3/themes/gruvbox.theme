@@ -1,0 +1,9 @@
+# Gruvbox theme
+# Colors (class, border, background, text, indicator, child_border)
+client.focused          #fabd2f #fabd2f #282828 #282828   #fabd2f
+client.focused_inactive #504945 #3c3836 #ebdbb2 #504945   #504945
+client.unfocused        #3c3836 #282828 #a89984 #3c3836   #3c3836
+client.urgent           #cc241d #fb4934 #ebdbb2 #cc241d   #cc241d
+client.placeholder      #282828 #282828 #ebdbb2 #282828   #282828
+client.background       #282828
+# wallpaper: gruvbox.jpg

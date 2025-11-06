@@ -1,0 +1,9 @@
+# ShadowTheme
+# Colors (class, border, background, text, indicator, child_border)
+client.focused          #bd93f9 #bd93f9 #191724 #e3c7fc   #bd93f9
+client.focused_inactive #140a1d #140a1d #e3c7fc #8897F4   #140a1d
+client.unfocused        #09090d #09090d #a8899c #140a1d   #09090d
+client.urgent           #B52A5B #B52A5B #e3c7fc #B52A5B   #B52A5B
+client.placeholder      #140a1d #140a1d #e3c7fc #140a1d   #140a1d
+client.background       #191724
+

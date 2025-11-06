@@ -1,0 +1,35 @@
+# Theme name: Cyberpunk Catppuccin
+# A hybrid theme combining cyberpunk colors with catppuccin aesthetics
+
+# Cyberpunk color palette
+set $flamingo  #FF6EE0
+set $pink      #FF00FF
+set $mauve     #BD93F9
+set $red       #FF1A8C
+set $text      #E3C7FC
+set $base      #0D0A12
+set $overlay0  #6C7086
+
+# Catppuccin-inspired base colors
+set $cat_blue     #89b4fa
+set $cat_surface  #313244
+set $cat_base     #1e1e2e
+set $cat_text     #cdd6f4
+set $cat_subtext  #a6adc8
+set $cat_overlay  #6c7086
+set $cat_pink     #f38ba8
+
+# Startup applications
+exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg
+
+# Window colors (class, border, background, text, indicator, child_border)
+client.focused          $cat_blue $cat_blue $cat_base $cat_base $cat_blue
+client.focused_inactive $cat_overlay $cat_surface $cat_text $cat_overlay $cat_overlay
+client.unfocused        $cat_surface $cat_base $cat_subtext $cat_surface $cat_surface
+client.urgent           $cat_pink $cat_pink $cat_base $cat_base $cat_pink
+client.placeholder      $cat_base $cat_base $cat_text $cat_base $cat_base
+client.background       $cat_base
+
+
+# Suggested wallpaper
+# wallpaper: cyberpunk_catppuccin.jpg
