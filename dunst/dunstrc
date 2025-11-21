@@ -1,0 +1,49 @@
+[global]
+    font = JetBrainsMono Nerd Font 12
+
+    # Colors
+    frame_color = "#000000"
+    separator_color = "#000000"
+    transparency = 0
+
+    # Geometry (corner notifications)
+    geometry = "300x80-20-20"
+    padding = 10
+    horizontal_padding = 10
+    frame_width = 2
+
+    # Styling
+    corner_radius = 10
+    progress_bar = true
+
+    # Format
+    format = "%s\n%b"
+
+    # Icon settings (optional)
+    icon_theme = hicolor
+    enable_recursive_icon_lookup = true
+    max_icon_size = 64
+
+    # Default timeout
+    timeout = 3000
+    idle_threshold = 120
+
+# ======================
+#      URGENCY COLORS
+# ======================
+
+[urgency_low]
+    background = "#FFFFFF"
+    foreground = "#000000"
+    frame_color = "#000000"
+
+[urgency_normal]
+    background = "#FFFFFF"
+    foreground = "#000000"
+    frame_color = "#000000"
+
+[urgency_critical]
+    background = "#FFFFFF"
+    foreground = "#000000"
+    frame_color = "#FF0000"
+    timeout = 0
