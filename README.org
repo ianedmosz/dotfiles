@@ -4,9 +4,12 @@
 
 *** Window manager Depends but i use ~i3~, ~Dwm~ and ~niri~ 
 
-*** Editor of use is ~Doom emacs~ or nvim
+*** Editor of code i use ~NeoVim~
+
+*** Note Taking i use ~doom emacs~
 
 *** ~Rofi~ as app launcher and wallpaper launcher
+**** I havent configured in dwm the keybinds.....
 
 *** Plugins in Waybar
 - Clock
