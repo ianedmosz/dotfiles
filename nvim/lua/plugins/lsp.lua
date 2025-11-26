@@ -21,6 +21,8 @@ return {
       "onsails/lspkind.nvim",
       "SmiteshP/nvim-navic",
       "mfussenegger/nvim-jdtls",
+	"hrsh7th/cmp-buffer",
+	    "hrsh7th/cmp-path",
     },
     opts = {
       ensure_installed = {
