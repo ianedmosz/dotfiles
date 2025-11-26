@@ -1,0 +1,129 @@
+@import url("/home/lain/.config/waybar/themes/shado.css");
+
+/* ============================
+     ESTILO GLOBAL MINIMALISTA
+   ============================ */
+* {
+    transition: 150ms;
+    border: none;
+    border-radius: 0px;
+    font-family: "JetBrainsMono Nerd Font";
+    font-weight: bold;
+    font-size: 13px;
+    min-height: 10px;
+}
+
+/* ============================
+       BARRA PRINCIPAL
+   ============================ */
+#waybar {
+    background: @base;
+    color: @text;
+}
+
+/* ============================
+            TRAY
+   ============================ */
+#tray {
+    padding: 0px;
+    background: none;
+}
+
+#tray > widget {
+    border-radius: 0px;
+    background: none;
+    padding: 0px;
+    margin: 0px 3px;
+    box-shadow: none;
+}
+
+#tray > widget > image {
+    padding: 0px;
+}
+
+/* ============================
+      MÓDULOS (super minimal)
+   ============================ */
+label.module {
+    padding: 0px 10px;
+    margin: 3px 3px;
+
+    border: none;
+    border-radius: 0px;
+    background: none;
+
+    box-shadow: none;
+    text-shadow: none;
+}
+
+/* Colores individuales */
+#clock { color: @color-clock; }
+#network { color: @color-network; } 
+#pulseaudio { color: @color-volume; }
+#custom-theme,
+#custom-waytheme { color: @color-theme-switch; }
+#custom-wallpaper { color: @color-wallpaper; }
+#custom-battery { color: @color-battery; }
+#custom-audio_idle_inhibitor,
+#bluetooth { color: @color-network; }
+#custom-power { color: @color-power; }
+
+/* Hover minimal */
+label.module:hover,
+#tray > widget:hover {
+    background: @highlightMed;
+    color: @text;
+}
+
+#tags,
+#workspaces {
+    margin: 1px;
+    padding: 0 4px;
+    background: none;
+}
+
+#tags button,
+#workspaces button {
+    font-family: "JetbrainsMono Nerd Font", monospace;
+    font-size: 40px;
+    padding: 4px 15px;
+    margin: 4px 4px;
+    border-radius: 2px;
+    background: none;
+    color: @text;
+    box-shadow: none;
+    text-shadow: none;
+}
+
+#tags button.empty,
+#workspaces button.empty {
+    background: none;
+    color: @text;
+}
+
+#tags button.focused,
+#tags button.occupied,
+#workspaces button,
+#workspaces button.active {
+    background: @highlightMed;
+    color: @text;
+}
+
+#tags button.focused,
+#workspaces button.active {
+    background: @color-active-workspace;
+    color: @text;
+}
+
+#tags button.occupied,
+#workspaces button.occupied {
+    background: @color-power;
+    color: @text;
+}
+
+#tags button.urgent,
+#workspaces button.urgent {
+    background: @color-power;
+    color: @text;
+}
+

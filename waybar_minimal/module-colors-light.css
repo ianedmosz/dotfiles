@@ -1,0 +1,30 @@
+/*
+ * ICON COLOR OVERRIDES FOR LIGHT THEME (Rosé Pine Dawn)
+ * These rules will override the defaults in style.css
+ */
+
+#network {
+    color: @pine;
+}
+
+#pulseaudio {
+    color: @iris;
+}
+
+#custom-waytheme {
+    color: @foam;
+}
+
+#custom-wallpaper {
+    color: @iris;
+}
+
+#bluetooth {
+    color: @pine;
+}
+
+#custom-power {
+    color: @love;
+}
+
+/* Clock and Workspace colors are okay, so we don't need to redefine them */
