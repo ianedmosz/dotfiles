@@ -11,6 +11,9 @@
 *** ~Rofi~ as app launcher and wallpaper launcher
 - I havent configured in dwm the keybinds.....
 
+
+** There are Two diffrent waybar versions, the one in the reddit post is in the normal waybar the other one is a new minimal waybar. 
+
 *** Plugins in Waybar
 - Clock
 - Cava
