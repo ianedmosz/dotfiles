@@ -1,0 +1,12 @@
+#!/bin/sh
+xrdb -merge ~/.Xresources
+feh --bg-fill ~/.config/wallpapers/lain4.jpeg
+picom &
+slstatus &
+dunst &
+eval $(/usr/bin/gnome-keyring-daemon --start)
+export SSH_AUTH_SOCK
+nm-applet &
+exec dwm
+
+

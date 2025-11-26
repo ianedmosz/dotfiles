@@ -1,0 +1,99 @@
+From 95e7342ae91d1011ea90ae1214cc0df1f44f7856 Mon Sep 17 00:00:00 2001
+From: Hai Nguyen <hhai2105@gmail.com>
+Date: Sun, 21 Nov 2021 00:43:21 -0500
+Subject: [PATCH] added togglefullscreen, modify focus(), unmanage() to be able
+ to cycle while in fullscreen
+
+---
+ config.def.h |  4 ++--
+ dwm.c        | 21 ++++++++++++++++++++-
+ 2 files changed, 22 insertions(+), 3 deletions(-)
+
+diff --git a/config.def.h b/config.def.h
+index a2ac963..4e13392 100644
+--- a/config.def.h
++++ b/config.def.h
+@@ -35,7 +35,7 @@ static const Rule rules[] = {
+ static const float mfact     = 0.55; /* factor of master area size [0.05..0.95] */
+ static const int nmaster     = 1;    /* number of clients in master area */
+ static const int resizehints = 1;    /* 1 means respect size hints in tiled resizals */
+-static const int lockfullscreen = 1; /* 1 will force focus on the fullscreen window */
++static const int lockfullscreen = 0; /* 1 will force focus on the fullscreen window */
+ 
+ static const Layout layouts[] = {
+ 	/* symbol     arrange function */
+@@ -75,10 +75,10 @@ static Key keys[] = {
+ 	{ MODKEY,                       XK_Tab,    view,           {0} },
+ 	{ MODKEY|ShiftMask,             XK_c,      killclient,     {0} },
+ 	{ MODKEY,                       XK_t,      setlayout,      {.v = &layouts[0]} },
+-	{ MODKEY,                       XK_f,      setlayout,      {.v = &layouts[1]} },
+ 	{ MODKEY,                       XK_m,      setlayout,      {.v = &layouts[2]} },
+ 	{ MODKEY,                       XK_space,  setlayout,      {0} },
+ 	{ MODKEY|ShiftMask,             XK_space,  togglefloating, {0} },
++	{ MODKEY,						XK_f,	   togglefullscreen, {0} },
+ 	{ MODKEY,                       XK_0,      view,           {.ui = ~0 } },
+ 	{ MODKEY|ShiftMask,             XK_0,      tag,            {.ui = ~0 } },
+ 	{ MODKEY,                       XK_comma,  focusmon,       {.i = -1 } },
+diff --git a/dwm.c b/dwm.c
+index 5e4d494..56d96a7 100644
+--- a/dwm.c
++++ b/dwm.c
+@@ -212,6 +212,7 @@ static void tagmon(const Arg *arg);
+ static void tile(Monitor *);
+ static void togglebar(const Arg *arg);
+ static void togglefloating(const Arg *arg);
++static void togglefullscreen();
+ static void toggletag(const Arg *arg);
+ static void toggleview(const Arg *arg);
+ static void unfocus(Client *c, int setfocus);
+@@ -802,7 +803,13 @@ focus(Client *c)
+ 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
+ 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
+ 	}
+-	selmon->sel = c;
++	if(selmon->sel && selmon->sel->isfullscreen){
++		togglefullscreen();
++		selmon->sel = c;
++		togglefullscreen();
++	}else{
++		selmon->sel = c;
++	}
+ 	drawbars();
+ }
+ 
+@@ -1722,6 +1729,14 @@ togglefloating(const Arg *arg)
+ 	arrange(selmon);
+ }
+ 
++void
++togglefullscreen()
++{
++	if (selmon->sel){
++		setfullscreen(selmon->sel, !selmon->sel->isfullscreen);
++	}
++}
++
+ void
+ toggletag(const Arg *arg)
+ {
+@@ -1767,6 +1782,7 @@ unmanage(Client *c, int destroyed)
+ {
+ 	Monitor *m = c->mon;
+ 	XWindowChanges wc;
++	int fullscreen = (selmon->sel == c && selmon->sel->isfullscreen)?1:0;
+ 
+ 	detach(c);
+ 	detachstack(c);
+@@ -1783,6 +1799,9 @@ unmanage(Client *c, int destroyed)
+ 	}
+ 	free(c);
+ 	focus(NULL);
++	if(fullscreen){
++		togglefullscreen();
++	}
+ 	updateclientlist();
+ 	arrange(m);
+ }
+-- 
+2.34.0
+
