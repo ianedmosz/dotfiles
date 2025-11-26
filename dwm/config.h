@@ -8,8 +8,7 @@ static const unsigned int gappih    = 20;       /* horiz inner gap between windo
 static const unsigned int gappiv    = 20;       /* vert inner gap between windows */
 static const unsigned int gappoh    = 20;       /* horiz outer gap between windows and screen edge */
 static const unsigned int gappov    = 30;       /* vert outer gap between windows and screen edge */
-static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */
-static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
+static       int smartgaps          = 1;        /* 1 means no outer gap when there is only one window */ static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
 static int showbar                  = 1;        /* 0 means no bar */
 static const int showtitle          = 1;        /* 0 means no title */
 static const int showtags           = 1;        /* 0 means no tags */
@@ -95,8 +94,19 @@ static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() 
 static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
 static const char *termcmd[]  = { "alacritty", NULL };
 static const char *rofi[]  = { "rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL };
+static const char *powermenu[] = { "/home/lain/.config/polybar/scripts/powermenu.sh", NULL };
 
+static const char *ss_clip_full[] = { "/bin/sh", "-c",
+    "maim | xclip -selection clipboard -t image/png",
+    NULL };
 
+static const char *ss_clip_select[] = { "/bin/sh", "-c",
+    "maim -s | xclip -selection clipboard -t image/png",
+    NULL };
+
+static const char *ss_save_select[] = { "/bin/sh", "-c",
+    "maim -s ~/Pictures/screenshot_$(date +%Y-%m-%d_%H-%M-%S).png",
+    NULL };
 static Keychord *keychords[] = {
     /* key count, modifier/key sequence,            function,        argument */
 
@@ -138,6 +148,7 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{MODKEY|ShiftMask, XK_comma}}, tagmon,         {.i = -1 } }),
     &((Keychord){1, {{MODKEY|ShiftMask, XK_period}},tagmon,         {.i = +1 } }),
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_f}}, spawn, {.v = (const char*[]){"firefox", NULL}} }),
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_p}},          spawn,          {.v = powermenu } }),
 
     // Keychords for navigating to tags (small hands/emacs pinky)
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_1}}, view, {.ui = 1 << 0} }),
@@ -149,7 +160,7 @@ static Keychord *keychords[] = {
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_7}}, view, {.ui = 1 << 6} }),
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_8}}, view, {.ui = 1 << 7} }),
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_9}}, view, {.ui = 1 << 8} }),
-
+    &((Keychord){1, {{MODKEY|ShiftMask, XK_p}},          spawn,          {.v = powermenu } }),
     
     // Emacs Scripts
     // &((Keychord){2, {{MODKEY, XK_e}, {0, XK_t}}, spawn, SHCMD("$HOME/scripts/tmux-dmenu.sh")}),
@@ -174,6 +185,9 @@ static Keychord *keychords[] = {
     &((Keychord){1, {{0, XF86XK_AudioLowerVolume}}, spawn, {.v = (const char*[]){"pactl", "set-sink-volume", "@DEFAULT_SINK@", "-3%", NULL} } }),
     &((Keychord){1, {{0, XF86XK_MonBrightnessUp}},   spawn, {.v = (const char*[]){"brightnessctl", "set", "+5%", NULL} } }),
     &((Keychord){1, {{0, XF86XK_MonBrightnessDown}}, spawn, {.v = (const char*[]){"brightnessctl", "set", "5%-", NULL} } }),
+    &((Keychord){1, {{0, XK_Home}},                   spawn, {.v = ss_clip_full } }),
+    &((Keychord){1, {{ShiftMask, XK_Home}},           spawn, {.v = ss_clip_select } }),
+    &((Keychord){1, {{Mod1Mask|ShiftMask, XK_Home}},  spawn, {.v = ss_save_select } }),
 };
 
 
