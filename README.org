@@ -9,7 +9,7 @@
 *** Note Taking i use ~doom emacs~
 
 *** ~Rofi~ as app launcher and wallpaper launcher
-**** I havent configured in dwm the keybinds.....
+- I havent configured in dwm the keybinds.....
 
 *** Plugins in Waybar
 - Clock
