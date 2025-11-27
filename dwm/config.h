@@ -18,10 +18,10 @@ static const int showfloating       = 0;        /* 0 means no floating indicator
 static int topbar                   = 1;        /* 0 means bottom bar */
 
 static const char *fonts[] = {
-    "JetBrainsMono Nerd Font Mono:style=Bold:size=16",
+    "JetBrainsMono Nerd Font Mono:style=Bold:size=14",
 };
 
-static const char dmenufont[]       = "JetBrainsMono Nerd Font Mono:style=Bold:size=16";
+static const char dmenufont[]       = "JetBrainsMono Nerd Font Mono:style=Bold:size=14";
 static const char col_gray1[]       = "#222222";
 static const char col_gray2[]       = "#444444";
 static const char col_gray3[]       = "#bbbbbb";
@@ -91,10 +91,22 @@ static const Layout layouts[] = {
 
 /* commands */
 static char dmenumon[2] = "0"; /* component of dmenucmd, manipulated in spawn() */
-static const char *dmenucmd[] = { "dmenu_run", "-m", dmenumon, "-fn", dmenufont, "-nb", col_gray1, "-nf", col_gray3, "-sb", col_cyan, "-sf", col_gray4, NULL };
+
+static const char *dmenucmd[] = { 
+    "dmenu_run", 
+    "-m", dmenumon, 
+    "-fn", dmenufont, 
+    "-nb", col_bg,       
+    "-nf", col_fg,      
+    "-sb", col_blk,    
+    "-sf", col_red,   
+    NULL 
+};
+
+
 static const char *termcmd[]  = { "alacritty", NULL };
-static const char *rofi[]  = { "rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL };
-static const char *powermenu[] = { "/home/lain/.config/polybar/scripts/powermenu.sh", NULL };
+//static const char *rofi[]  = { "rofi", "-show", "drun", "-theme", "~/.config/rofi/config.rasi", NULL };
+static const char *powermenu[] = { "/home/lain/.config/Scripts/power.sh", NULL };
 
 static const char *ss_clip_full[] = { "/bin/sh", "-c",
     "maim | xclip -selection clipboard -t image/png",
@@ -110,9 +122,9 @@ static const char *ss_save_select[] = { "/bin/sh", "-c",
 static Keychord *keychords[] = {
     /* key count, modifier/key sequence,            function,        argument */
 
-    &((Keychord){1, {{MODKEY, XK_p}},               spawn,          {.v = dmenucmd } }),
+    &((Keychord){1, {{MODKEY, XK_d}},               spawn,          {.v = dmenucmd } }),
     &((Keychord){1, {{MODKEY, XK_Return}},          spawn,          {.v = termcmd } }),
-    &((Keychord){1, {{MODKEY, XK_d}},               spawn,          {.v = rofi } }),
+  //  &((Keychord){1, {{MODKEY, XK_d}},               spawn,          {.v = rofi } }),
 
     &((Keychord){1, {{MODKEY, XK_b}},               togglebar,      {0} }),
     &((Keychord){1, {{MODKEY, XK_j}},               focusstack,     {.i = +1 } }),
@@ -160,7 +172,6 @@ static Keychord *keychords[] = {
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_7}}, view, {.ui = 1 << 6} }),
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_8}}, view, {.ui = 1 << 7} }),
     &((Keychord){2, {{MODKEY, XK_space}, {0, XK_9}}, view, {.ui = 1 << 8} }),
-    &((Keychord){1, {{MODKEY|ShiftMask, XK_p}},          spawn,          {.v = powermenu } }),
     
     // Emacs Scripts
     // &((Keychord){2, {{MODKEY, XK_e}, {0, XK_t}}, spawn, SHCMD("$HOME/scripts/tmux-dmenu.sh")}),
