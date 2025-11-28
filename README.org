@@ -8,8 +8,9 @@
 
 *** Note Taking i use ~doom emacs~
 
-*** ~Rofi~ as app launcher and wallpaper launcher
+*** ~Rofi~ as app launcher and wallpaper launcher but if i want minimalism i use dmenu
 - I havent configured in dwm the keybinds.....
+
 
 
 ** There are Two diffrent waybar versions, the one in the reddit post is in the normal waybar the other one is a new minimal waybar. 
