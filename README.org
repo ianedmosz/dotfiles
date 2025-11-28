@@ -2,7 +2,7 @@
 #+Author: Ianedmsz
 #+Description:
 
-*** Window manager Depends but i use ~i3~, ~Dwm~ and ~niri~ 
+*** Window manager Depends but i use ~i3~, ~Dwm~ , ~niri~ and Now ~Xmonad~ Lol
 
 *** Editor of code i use ~NeoVim~
 
