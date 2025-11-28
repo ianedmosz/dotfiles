@@ -36,10 +36,6 @@ myTerminal = "alacritty"
 
 myStartupHook :: X ()
 myStartupHook = do
-    screenWorkspace 0 >>= \mw ->
-        case mw of
-            Just ws -> windows (W.view "一")
-            Nothing -> return ()
     spawnOnce "xrdb -merge ~/.Xresources"
     spawnOnce "nitrogen --restore"
     spawnOnce "picom &"
@@ -48,8 +44,7 @@ myStartupHook = do
     spawnOnce "eval $(/usr/bin/gnome-keyring-daemon --start)"
     spawnOnce "export SSH_AUTH_SOCK"
     spawnOnce "nm-applet &"
-    spawn "xrandr --output HDMI-1-0 --mode 1920x1080 --pos 2560x0 --rotate normal"
-
+    spawnOnce "~/.local/bin/monitor.sh"
     spawn "xset s off"     -- screensaver OFF
     spawn "xset -dpms"     -- desactivar energía
     spawn "xset s noblank" -- evitar pantalla negra
@@ -71,6 +66,7 @@ myLayout =
 myXmobarPP :: PP
 myXmobarPP = def
     { ppCurrent         = xmobarColor "#f7768e" ""
+    , ppVisible         = xmobarColor "#f7768e" ""
     , ppHidden          = xmobarColor "#a9b1d6" ""
     , ppHiddenNoWindows = const ""   -- no mostrar vacíos
     , ppTitle           = const ""   -- sin títulos
