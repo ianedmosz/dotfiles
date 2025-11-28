@@ -6,7 +6,7 @@
 
 *** Editor of code i use ~NeoVim~
 
-*** Note Taking i use ~doom emacs~
+*** Note Taking i use ~doom emacs~ and i also have my own config from scratch from emacs based in the kickstart config. 
 
 *** ~Rofi~ as app launcher and wallpaper launcher but if i want minimalism i use dmenu
 - I havent configured in dwm the keybinds.....
