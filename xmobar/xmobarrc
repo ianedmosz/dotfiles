@@ -1,0 +1,45 @@
+Config {
+     font            = "JetBrainsMono Nerd Font Mono Bold 20"
+   , additionalFonts = [ "JetBrainsMono Nerd Font Mono 20" ]
+   , bgColor         = "#1a1b26"
+   , fgColor         = "#a9b1d6"
+   , position        = TopSize C 100 35
+   , border          = BottomB
+   , borderColor     = "#444b6a"
+   , borderWidth     = 2
+
+   , sepChar         = "%"
+   , alignSep        = "}{"
+   , template        = " <fc=#bd93f9>Usr:</fc> %uname% <fc=#444b6a>│</fc> %XMonadLog% }{ %memory% <fc=#444b6a>│</fc> %battery% <fc=#444b6a>│</fc> <fc=#ff4971>Vol:</fc> %volume% <fc=#444b6a>│</fc> %date% "
+
+   , commands        =
+        [ Run XMonadLog
+        , Run Com "whoami" [] "uname" 30          
+
+        , Run Memory
+            [ "-t", "<fc=#ff4971>󰍛 MEM:</fc> <usedratio>%"
+            , "-L", "30"
+            , "-H", "70"
+            , "-l", "#bd93f9"
+            , "-n", "#e0af68"
+            , "-h", "#f7768e"
+            ] 10
+
+        , Run Battery
+            [ "-t", "<fc=#ff4971>󱐋 BAT:</fc> <acstatus>"
+            , "-L", "20"
+            , "-H", "80"
+            , "-l", "#f7768e"
+            , "-n", "#e0af68"
+            , "-h", "#f7768e"
+            , "--"
+            , "-o", "<left>% (<timeleft>)"
+            , "-O", "<fc=#e0af68>Charging</fc> <left>%"
+            , "-i", "<fc=#9ece6a>Charged</fc>"
+            ] 50
+
+         , Run Com "pamixer" ["--get-volume"] "volume" 1
+
+        , Run Date "<fc=#F18FB0> %a %b %_d %H:%M</fc>" "date" 10
+        ]
+   }
