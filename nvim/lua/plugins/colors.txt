@@ -1,0 +1,13 @@
+return {
+  {
+    "jesseleite/nvim-noirbuddy",
+    dependencies = { "tjdevries/colorbuddy.nvim" },
+    priority = 1000,
+    config = function()
+      require("noirbuddy").setup({
+        preset = "minimal",   -- o "dark", "slate", etc.
+      })
+      vim.cmd("colorscheme noirbuddy")
+    end,
+  },
+}
