@@ -9,6 +9,9 @@
 #
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
+include ~/.config/i3/bar.conf
+set $term alacritty
+
 set $mod Mod1
 # Cambiar la fuente de los títulos de ventana
 font pango:JetBrainsMono Nerd Font 15
@@ -22,19 +25,15 @@ font pango:monospace 10
 #default_floating_border pixel 0
 
 for_window [class="^.*"] border pixel 0
-exec_always --no-startup-id ~/.config/i3/scripts/startup.sh
 
-exec_always --no-startup-id sh -c "sleep 1 && picom
+#exec_always --no-startup-id ~/.config/i3/scripts/startup.sh
+#exec_always --no-startup-id sh -c "sleep 1 && picom
 
 exec --no-startup-id xrandr --output DP-1 --left-of eDP-1
 
 exec_always xrdb -merge ~/.Xresources &
 
-# Ejecutar Picom al inicio
-# Bajar brillo 10%
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
-
-# Subir brillo 10%
 bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
 
 exec --no-startup-id xinput --set-prop <ID> "libinput Accel Speed" 0.5
@@ -61,7 +60,7 @@ exec --no-startup-id xss-lock --transfer-sleep-lock -- i3lock --nofork
 exec --no-startup-id nm-applet
 
 
-exec_always --no-startup-id ~/.config/polybar/launch.sh
+#exec_always --no-startup-id ~/.config/polybar/launch.sh
 
 # Use pactl to adjust volume in PulseAudio.
 set $refresh_i3status killall -SIGUSR1 i3status
@@ -78,16 +77,17 @@ floating_modifier $mod
 tiling_drag modifier titlebar
 
 # start a terminal
-bindsym $mod+Return exec kitty
-exec_always --no-startup-id polybar
+bindsym $mod+Return exec alacritty
+bindsym $mod+Shift+w exec --no-startup-id ~/.local/bin/wallmenu.sh
+bindsym $mod+Shift+p exec --no-startup-id ~/.local/bin/power-menu.sh
+
+#exec_always --no-startup-id polybar
 
 # kill focused window
 bindsym $mod+Shift+q kill
 
-# start dmenu (a program launcher)
-# Lanzar Rofi con mod+d
-bindsym $mod+d exec rofi -show drun -dpi 150
-# Abrir powermenu con Mod4+p
+#bindsym $mod+d exec rofi -show drun -dpi 150
+bindsym $mod+d exec dmenu_run
 
 # A more modern dmenu replacement is rofi:
 # bindcode $mod+40 exec "rofi -modi drun,run -show drun"
@@ -146,13 +146,12 @@ bindsym $mod+a focus parent
 # focus the child container
 #bindsym $mod+d focus child
 
-
 # Open WallpaperScripts
-bindsym $mod+Shift+w exec --no-startup-id bash ~/.config/i3/scripts/theme-wallpaper-switch.sh
+#bindsym $mod+Shift+w exec --no-startup-id bash ~/.config/i3/scripts/theme-wallpaper-switch.sh
 
 # Open theme polybar script
 
-bindsym $mod+Shift+p exec --no-startup-id bash ~/.config/polybar/scripts/theme-switch.sh
+#bindsym $mod+Shift+p exec --no-startup-id bash ~/.config/polybar/scripts/theme-switch.sh
 
 # Define names for default workspaces for which we configure key bindings later on.
 # We use variables to avoid repeating the names in multiple places.
@@ -246,14 +245,8 @@ set $text      #E3C7FC
 set $base      #0D0A12
 set $overlay0  #6C7086
 
-# Ventanas
 
 
-exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=pkcs11,secrets,ssh,gpg
-
-exec --no-startup-id /usr/bin/nm-applet --indicator
-
-# Theme colors applied by theme-wallpaper-switch.sh
 # ShadowTheme
 # Colors (class, border, background, text, indicator, child_border)
 client.focused          #bd93f9 #bd93f9 #191724 #e3c7fc   #bd93f9
@@ -262,4 +255,6 @@ client.unfocused        #09090d #09090d #a8899c #140a1d   #09090d
 client.urgent           #B52A5B #B52A5B #e3c7fc #B52A5B   #B52A5B
 client.placeholder      #140a1d #140a1d #e3c7fc #140a1d   #140a1d
 client.background       #191724
+
+
 
