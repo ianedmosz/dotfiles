@@ -1,0 +1,37 @@
+[general]
+separator_block_width=20
+interval=1
+
+[date]
+command=echo "$(date '+%a %b %d  %H:%M')"
+interval=10
+color=#f18fb0
+separator=true
+
+
+[battery]
+command=$HOME/.config/polybar/scripts/battery_status.sh
+interval=10
+separator=true
+separator_block_width=20
+
+
+[volume]
+command=pamixer --get-volume
+interval=1
+label= Vol:
+separator=true
+separator_block_width=20
+
+
+[weather]
+command=curl -Ss 'wttr.in/Monterrey,MX?format=1' | sed 's/:/│/'
+interval=1800
+color=#A4C2F4
+separator=false
+
+
+[right-space]
+full_text=""
+interval=once
+separator=false

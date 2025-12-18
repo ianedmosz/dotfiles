@@ -1,0 +1,24 @@
+general {
+    colors = true
+    interval = 5
+}
+
+order += "volume master"
+order += "battery 0"
+order += "tztime local"
+
+volume master {
+    format = "Vol: %volume"
+    format_muted = "Vol: mute"
+}
+
+battery 0 {
+    format = "Bat: %percentage"
+    format_down = "Bat: N/A"
+    threshold_type = percentage
+    low_threshold = 20
+}
+
+tztime local {
+    format = "%a %b %d %H:%M"
+}
