@@ -1,1 +1,26 @@
+[general]
+
+import = [
+    "~/.config/alacritty/themes/themes/aura.toml"
+]
+
+
+[font]
+size = 14.0 # Adjust this value as needed
+
+    [font.normal]
+    family = "JetBrainsMono Nerd Font" # Replace with your desired font
+    style = "Regular"
+
+    [font.bold]
+    family = "JetBrainsMono Nerd Font Mono" # Replace with your desired font
+    style = "Bold"
+
+    [font.italic]
+    family = "JetBrainsMono Nerd Font Mono" # Replace with your desired font
+    style = "Italic"
+
+    [font.bold_italic]
+    family = "JetBrainsMono Nerd Font" # Replace with your desired font
+    style = "Bold Italic"
 
