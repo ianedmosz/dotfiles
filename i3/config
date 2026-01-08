@@ -10,6 +10,11 @@
 # Please see https://i3wm.org/docs/userguide.html for a complete reference!
 
 include ~/.config/i3/bar.conf
+
+#exec_always --no-startup-id sh -c "$HOME/bin/monitor.sh"
+exec_always --no-startup-id sh -c "~/.local/bin/wall-restore.sh"
+
+
 set $term alacritty
 
 set $mod Mod1
@@ -26,26 +31,12 @@ font pango:monospace 10
 
 for_window [class="^.*"] border pixel 0
 
-#exec_always --no-startup-id ~/.config/i3/scripts/startup.sh
-#exec_always --no-startup-id sh -c "sleep 1 && picom
-
-exec --no-startup-id xrandr --output DP-1 --left-of eDP-1
-
-exec_always xrdb -merge ~/.Xresources &
 
 bindsym XF86MonBrightnessDown exec brightnessctl set 5%-
 bindsym XF86MonBrightnessUp exec brightnessctl set 5%+
 
 exec --no-startup-id xinput --set-prop <ID> "libinput Accel Speed" 0.5
 
-# Ajuste DPI para pantalla de laptop
-exec --no-startup-id xrdb -merge ~/.Xresources
-# This font is widely installed, provides lots of unicode glyphs, right-to-left
-# text rendering and scalability on retina/hidpi displays (thanks to pango).
-#font pango:DejaVu Sans Mono 8
-
-# Start XDG autostart .desktop files using dex. See also
-# https://wiki.archlinux.org/index.php/XDG_Autostart
 exec --no-startup-id dex --autostart --environment i3
 
 # The combination of xss-lock, nm-applet and pactl is a popular choice, so
@@ -224,7 +215,7 @@ gaps inner 4
 gaps outer 4
 
 # Smart gaps (quita el gap cuando hay solo una ventana)
-smart_gaps on
+#smart_gaps on
 
 bindsym Home exec maim | xclip -selection clipboard -t image/png
 bindsym Shift+Home exec maim -s | xclip -selection clipboard -t image/png
@@ -258,3 +249,4 @@ client.background       #191724
 
 
 
+exec --no-startup-id /usr/bin/gnome-keyring-daemon --start --components=secrets,ssh
