@@ -1,0 +1,28 @@
+/*
+* Variant: ShadowTheme - REVISED WITH MODULE-SPECIFIC COLORS
+* Maintainer: User
+*/
+
+/* --- CORE THEME COLORS (Mapped from your input) --- */
+@define-color base              #191724;    /* Mapped from background */
+@define-color surface           #140a1d;    /* Mapped from surface */
+@define-color overlay           #140a1d;    /* Mapped from overlay */
+@define-color muted             #a8899c;    /* Mapped from muted */
+@define-color subtle            #a8899c;    /* Mapped from subtle */
+@define-color text              #e3c7fc;    /* Mapped from foreground */
+
+@define-color highlightLow      #09090d;    /* Mapped from surface-variant */
+@define-color highlightMed      #140a1d;    /* Mapped from overlay */
+@define-color highlightHigh     #f1c4e0;    /* Mapped from border */
+
+/* --- MODULE-SPECIFIC COLORS (Mapped and selected for visibility) --- */
+/* Note: Since this is a dark theme, we use bright/light colors for icons. */
+
+@define-color color-clock           #FF4971;    /* Accent for high visibility */
+@define-color color-network         #8897F4;    /* Secondary */
+@define-color color-volume          #bd93f9;    /* Primary */
+@define-color color-battery         #a8899c;    /* Subtle/Muted for less emphasis */
+@define-color color-power           #B52A5B;    /* Error for power/urgent actions */
+@define-color color-theme-switch    #F18FB0;    /* Success for switches */
+@define-color color-wallpaper       #8897F4;    /* Secondary/Wallpaper */
+@define-color color-active-workspace #F18FB0;   /* Success for active/focused elements */
