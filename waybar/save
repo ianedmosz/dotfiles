@@ -1,0 +1,226 @@
+{
+    "layer": "top",
+    "position": "top",
+    "height": 30,
+    "reload_style_on_change": true,
+
+    "modules-left": [
+        "niri/workspaces",
+        "clock"
+    ],
+    "modules-center": [
+        "custom/window"
+    ],
+    "modules-right": [
+        "custom/theme",
+        "custom/waytheme",
+        "custom/wallpaper",
+        "bluetooth",
+        "tray",
+        "pulseaudio",
+        "custom/audio_idle_inhibitor",
+        "custom/battery",
+        "custom/power"
+    ],
+
+    "custom/icon": {
+        "format": "",
+        "font": "FiraCode Nerd Font 16"
+    },
+
+    "custom/media#2": {
+        "format": " {} {icon} ",
+        "format-icons": {
+            "spotify": "",
+            "default": "🎵"
+        },
+        "exec": "~/.config/waybar/playerinfo.sh",
+        "escape": true,
+        "return-type": "json",
+        "tooltip": true,
+        "on-click": "playerctl play-pause"
+    },
+
+    "custom/media#1": {
+        "format": "",
+        "on-click": "playerctl previous"
+    },
+
+    "custom/separator": {
+        "format": " "
+    },
+
+    "custom/wallpaper": {
+        "format": "",
+        "on-click": "~/.config/niri/scripts/set_wallpaper.sh"
+    },
+
+    "custom/waytheme": {
+        "format": "",
+        "on-click": "~/.config/niri/scripts/theme_setter.sh"
+    },
+
+    "custom/theme": {
+        "format": "",
+        "on-click": "~/.config/waybar/scripts/theme-switcher.sh"
+    },
+
+    "custom/date": {
+        "exec": "~/.config/waybar/scripts/date.sh",
+        "interval": 60
+    },
+
+    "custom/window": {
+        "exec": "~/.config/waybar/scripts/window.sh",
+        "interval": 1,
+        "format": "{}",
+        "tooltip": false
+    },
+
+    "custom/media#3": {
+        "format": "",
+        "on-click": "playerctl next"
+    },
+
+    "custom/player": {
+        "exec": "sb-player",
+        "max-length": 30,
+        "interval": 1,
+        "on-click": "playerctl play-pause"
+    },
+
+    "custom/dollar": {
+        "exec": "sb-dollar",
+        "interval": 21600
+    },
+
+    "custom/battery": {
+        "exec": "~/.config/waybar/scripts/batery.sh",
+        "interval": 2,
+        "return-type": "text",
+        "tooltip": false
+    },
+
+    "pulseaudio": {
+        "format": "{icon} {volume}%",
+        "format-icons": ["󰕿", "󰖀", "󰕾"],
+        "format-muted": "󰝟",
+        "tooltip-format": "{volume}% ({desc})",
+        "on-click": "pavucontrol",
+        "scroll-step": 5
+    },
+
+    "clock": {
+        "format": "󰅐  {:%H:%M:%S}",
+        "format-alt": "󰅐  {:%A, %B %d, %Y (%R:%S)}",
+        "interval": 1,
+        "tooltip-format": "<span>{calendar}</span>",
+        "calendar": {
+            "mode": "month",
+            "mode-mon-col": 3,
+            "on-scroll": 1,
+            "on-click-right": "mode",
+            "format": {
+                "days": "<span color='#c6d7d8'><b>{}</b></span>",
+                "weekdays": "<span color='#54A4B0'><b>{}</b></span>",
+                "today": "<span color='#fcb167'><b>{}</b></span>"
+            }
+        },
+        "actions": {
+            "on-click": "mode",
+            "on-scroll-up": "shift_up",
+            "on-scroll-down": "shift_down"
+        }
+    },
+
+    "network": {
+        "family": "ipv4",
+        "format": "⚠",
+        "format-wifi": " ",
+        "format-ethernet": " ",
+        "format-disconnected": "⚠",
+        "tooltip": true,
+        "tooltip-format": " {essid} "
+    },
+
+    "tray": {
+        "icon-size": 16,
+        "spacing": 2,
+        "show-passive-items": false,
+        "exclude": ["nm-applet","NetworkManager Applet","blueman-manage"]
+    },
+
+    "custom/power": {
+        "format": "⏻",
+        "on-click": "~/.config/niri/scripts/power-menu.sh",
+        "tooltip": false
+    },
+
+    "custom/notifications": {
+        "format": "{}",
+        "on-click": "swaync-client -t -sw",
+        "exec": "~/.config/waybar/scripts/waybar-notification.sh",
+        "tooltip": false,
+        "interval": 1
+    },
+
+    "custom/audio_idle_inhibitor": {
+        "format": "{icon}",
+        "exec": "sway-audio-idle-inhibit --dry-print-both-waybar",
+        "exec-if": "which sway-audio-idle-inhibit",
+        "return-type": "json",
+        "format-icons": {
+            "output": "",
+            "input": "",
+            "output-input": "  ",
+            "none": ""
+        }
+    },
+
+    "bluetooth": {
+        "on-click": "blueman-manager"
+    },
+
+    "idle_inhibitor": {
+        "format": "{icon}",
+        "format-icons": {
+            "activated": "󰒳 ",
+            "deactivated": "󰒲 "
+        }
+    },
+
+    "custom/weather": {
+        "format": "{}°",
+        "tooltip": true,
+        "interval": 1800,
+        "exec": "wttrbar --location selestat --date-format %d-%m-%Y --lang fr",
+        "return-type": "json"
+    },
+
+    "niri/workspaces": {
+        "disable-scroll": false,
+        "on-click": "activate",
+        "active-only": false,
+        "all-outputs": false,
+        "format": "{icon}",
+        "format-icons": {
+            "1": "一",
+            "2": "二",
+            "3": "三",
+            "4": "四",
+            "5": "五",
+            "6": "六",
+            "7": "七",
+            "8": "八",
+            "9": "九",
+            "10": "十",
+        },
+        "persistent-workspaces": {
+            "*": 5
+        }
+    }
+}
+
+
+
+
