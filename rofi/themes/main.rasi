@@ -1,0 +1,14 @@
+/**
+ * Rofi Colors Theme - shado-colors.rasi
+ * This file is imported by the main config.rasi for modularity.
+ */
+
+* {
+    /* Color variables are defined inside the global selector (*) */
+    background:      #25242a;
+    background-alt:  #7F849C;
+    foreground:      #bebfc6;
+    selected:        #f44c1d;
+    active:          #89B4FA;
+    urgent:          #8E3596;
+}
